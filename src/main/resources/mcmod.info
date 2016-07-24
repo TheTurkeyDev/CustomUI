@@ -1,0 +1,16 @@
+[
+{
+  "modid": "customui",
+  "name": "CustomUI",
+  "description": "Provides small tweaks to UI features",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Turkey2349"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
