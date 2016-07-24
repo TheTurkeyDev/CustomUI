@@ -1,5 +1,6 @@
 package com.theprogrammingturkey.customUI.listener;
 
+import com.theprogrammingturkey.customUI.CustomUICore;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -25,8 +26,18 @@ public class GuiListener
 			Slot s = gui.getSlotUnderMouse();
 			if(s == null)
 				return;
-			int left = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiLeft");
-			int top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiTop");
+			int left;
+			int top;
+			if(CustomUICore.VERSION.equalsIgnoreCase("@VERSION@"))
+			{
+				left = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiLeft");
+				top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiTop");
+			}
+			else
+			{
+				left = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "field_147003_i");
+				top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "field_147009_r");
+			}
 			GlStateManager.translate(left, top, 0.0F);
 			GlStateManager.disableLighting();
             GlStateManager.disableDepth();
