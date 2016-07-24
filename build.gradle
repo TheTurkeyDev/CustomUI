@@ -18,7 +18,7 @@ version = "${mc_version}-${mod_version}"
 
 minecraft {
     version = "${mc_version}-${forge_version}"
-    runDir = "run-1.10.2"
+    runDir = "run-1.9.4"
 
     mappings = "snapshot_20160518"
     

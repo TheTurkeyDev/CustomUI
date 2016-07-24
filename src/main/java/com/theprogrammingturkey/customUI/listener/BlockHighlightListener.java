@@ -42,7 +42,7 @@ public class BlockHighlightListener
 				double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
 				double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 				double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
-				RenderGlobal.func_189697_a(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), CustomUISettings.highlightColorR, CustomUISettings.highlightColorG, CustomUISettings.highlightColorB, CustomUISettings.highlightColorA);
+				RenderGlobal.drawOutlinedBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), (int) (CustomUISettings.highlightColorR * 255), (int) (CustomUISettings.highlightColorG * 255), (int) (CustomUISettings.highlightColorB * 255), (int) (CustomUISettings.highlightColorA * 255));
 			}
 
 			GlStateManager.depthMask(true);

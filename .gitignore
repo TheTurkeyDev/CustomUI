@@ -21,10 +21,13 @@ build
 eclipse
 run
 CREDITS-fml.txt
-forge-1.10.2-12.18.1.2011-changelog.txt
+forge-1.9.4-12.17.0.1922-1.9.4-changelog.txt
+LICENSE-fml.txt
 LICENSE-new.txt
+MinecraftForge-License.txt
 MinecraftForge-Credits.txt
 Paulscode IBXM Library License.txt
 Paulscode SoundSystem CodecIBXM License.txt
 README.txt
 run-1.10.2/
+run-1.9.4/
