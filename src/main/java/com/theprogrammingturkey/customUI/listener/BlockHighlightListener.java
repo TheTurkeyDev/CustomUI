@@ -42,7 +42,55 @@ public class BlockHighlightListener
 				double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
 				double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 				double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
-				RenderGlobal.drawOutlinedBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), (int) (CustomUISettings.highlightColorR * 255), (int) (CustomUISettings.highlightColorG * 255), (int) (CustomUISettings.highlightColorB * 255), (int) (CustomUISettings.highlightColorA * 255));
+
+				int redAmount = (int) (CustomUISettings.highlightColorR * 255);
+				int greenAmount = (int) (CustomUISettings.highlightColorG * 255);
+				int blueAmount = (int) (CustomUISettings.highlightColorB * 255);
+				int alphaAmount = (int) (CustomUISettings.highlightColorA * 255);
+
+				if(CustomUISettings.highlightAffectedByLight)
+				{
+					BlockPos lightCheckPos;
+
+					switch(movingObjectPositionIn.sideHit)
+					{
+						case DOWN:
+							lightCheckPos = blockpos.add(0, -1, 0);
+							break;
+						case EAST:
+							lightCheckPos = blockpos.add(1, 0, 0);
+							break;
+						case NORTH:
+							lightCheckPos = blockpos.add(0, 0, -1);
+							break;
+						case SOUTH:
+							lightCheckPos = blockpos.add(0, 0, 1);
+							break;
+						case UP:
+							lightCheckPos = blockpos.add(0, 1, 0);
+							break;
+						case WEST:
+							lightCheckPos = blockpos.add(-1, 0, 0);
+							break;
+						default:
+							lightCheckPos = blockpos;
+							break;
+					}
+
+					int light = (int)((15.0f - (float)theWorld.getLight(lightCheckPos)) / 6.0f);
+
+					if(light > 0)
+					{
+						redAmount /= light;
+						greenAmount /= light;
+						blueAmount /= light;
+						alphaAmount /= light;
+					}
+				}
+
+				
+
+				RenderGlobal.drawOutlinedBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
 			}
 
 			GlStateManager.depthMask(true);
