@@ -15,6 +15,7 @@ public class ConfigGui extends GuiScreen
 	private GuiButton hitBoxSettings;
 	private GuiButton guiOverlaySettings;
 	private GuiButton buttonAnimationSettings;
+	private GuiButton armorInfoSettings;
 	private GuiButton save;
 
 	private GuiScreen parentScreen;
@@ -25,10 +26,13 @@ public class ConfigGui extends GuiScreen
 	private GuiSlider thicknessSlider;
 	private GuiButton useDefaultBox;
 	private GuiButton useGuiHighlight;
+	private GuiButton highlightAffectedByLight;
 
 	private GuiButton useButtonAnimation;
 	private GuiButton buttonAnimationType;
 	private GuiSlider animationSpeedSlider;
+
+	private GuiButton useArmorHUD;
 
 	private int gradientX = this.width / 2 + 155;
 	private int gradientY = 80;
@@ -44,9 +48,10 @@ public class ConfigGui extends GuiScreen
 	public void initGui()
 	{
 		this.buttonList.clear();
-		this.buttonList.add(hitBoxSettings = new GuiButton(1000, this.width / 2 - 50, 25, 100, 20, "Block Selection"));
-		this.buttonList.add(guiOverlaySettings = new GuiButton(1001, this.width / 2 - 50, 50, 100, 20, "Gui Slot Highlight"));
-		this.buttonList.add(buttonAnimationSettings = new GuiButton(1002, this.width / 2 - 50, 75, 100, 20, "Button Animations"));
+		this.buttonList.add(hitBoxSettings = new GuiButton(1000, this.width / 2 - 125, 25, 100, 20, "Block Selection"));
+		this.buttonList.add(guiOverlaySettings = new GuiButton(1001, this.width / 2 + 25, 25, 100, 20, "Gui Slot Highlight"));
+		this.buttonList.add(buttonAnimationSettings = new GuiButton(1002, this.width / 2 - 125, 50, 100, 20, "Button Animations"));
+		this.buttonList.add(armorInfoSettings = new GuiButton(1003, this.width / 2 + 25, 50, 100, 20, "Armor Info"));
 
 		this.buttonList.add(save = new GuiButton(0, this.width / 2 - 100, this.height - 25, 200, 20, "Save"));
 		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height - 50, 200, 20, "Back"));
@@ -58,10 +63,13 @@ public class ConfigGui extends GuiScreen
 		this.buttonList.add(thicknessSlider = new GuiSlider(14, "Thickness", this.width / 2 - 100, 130, 1F, 10F, CustomUISettings.highlightLineThickness, 0.5F));
 		this.buttonList.add(useDefaultBox = new GuiButton(15, this.width / 2 - 100, 155, 150, 20, "Default selection box: " + (CustomUISettings.includeDefaultHighlight ? "On" : "Off")));
 		this.buttonList.add(useGuiHighlight = new GuiButton(16, this.width / 2 - 100, 130, 150, 20, "Gui Highlight: " + (CustomUISettings.guiHighlight ? "On" : "Off")));
-
+		this.buttonList.add(highlightAffectedByLight = new GuiButton(17, this.width / 2 - 100, 180, 150, 20, "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off")));
+		
 		this.buttonList.add(useButtonAnimation = new GuiButton(20, this.width / 2 - 100, 30, 200, 20, "Button Animations: " + (CustomUISettings.buttonAnimation ? "On" : "Off")));
 		this.buttonList.add(buttonAnimationType = new GuiButton(21, this.width / 2 - 100, 55, 200, 20, "Button Animation Type: " + CustomUISettings.buttonAnimationType.getTypeName()));
 		this.buttonList.add(animationSpeedSlider = new GuiSlider(22, "Speed", this.width / 2 - 75, 80, 0F, 40F, CustomUISettings.buttonAnimationSpeed, 1F));
+
+		this.buttonList.add(useArmorHUD = new GuiButton(30, this.width / 2 - 100, 30, 200, 20, "Armor Gui Hud: " + (CustomUISettings.armorGuiHud ? "On" : "Off")));
 
 		this.setEditState(SettingEditing.None);
 	}
@@ -115,13 +123,17 @@ public class ConfigGui extends GuiScreen
 			{
 				if(this.editing == SettingEditing.BlockHighlight)
 				{
-					CustomUIConfigLoader.saveBlockHighlightSettings(alphaSlider.getValue(), redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue(), thicknessSlider.getValueAdjusted(10.0F), CustomUISettings.includeDefaultHighlight);
+					CustomUIConfigLoader.saveBlockHighlightSettings(alphaSlider.getValue(), redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue(), thicknessSlider.getValueAdjusted(10.0F), CustomUISettings.includeDefaultHighlight, CustomUISettings.highlightAffectedByLight);
 				}
 				else if(this.editing == SettingEditing.GuiHighlight)
 				{
 					CustomUIConfigLoader.saveGuiHighlightSettings(CustomUISettings.guiHighlight, redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
 				}
 				else if(this.editing == SettingEditing.ButtonAnimation)
+				{
+					CustomUIConfigLoader.saveButtonAnimationSettings(CustomUISettings.buttonAnimation, this.animationSpeedSlider.getValueAdjusted(40.0F), CustomUISettings.buttonAnimationType);
+				}
+				else if(this.editing == SettingEditing.ArmorInfo)
 				{
 					CustomUIConfigLoader.saveButtonAnimationSettings(CustomUISettings.buttonAnimation, this.animationSpeedSlider.getValueAdjusted(40.0F), CustomUISettings.buttonAnimationType);
 				}
@@ -145,6 +157,11 @@ public class ConfigGui extends GuiScreen
 				CustomUISettings.guiHighlight = !CustomUISettings.guiHighlight;
 				useGuiHighlight.displayString = "Gui Highlight: " + (CustomUISettings.guiHighlight ? "On" : "Off");
 			}
+			else if(button.id == 17)
+			{
+				CustomUISettings.highlightAffectedByLight = !CustomUISettings.highlightAffectedByLight;
+				highlightAffectedByLight.displayString = "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off");
+			}
 			else if(button.id == 20)
 			{
 				CustomUISettings.buttonAnimation = !CustomUISettings.buttonAnimation;
@@ -154,6 +171,11 @@ public class ConfigGui extends GuiScreen
 			{
 				CustomUISettings.buttonAnimationType = CustomUISettings.buttonAnimationType.getNext();
 				this.buttonAnimationType.displayString = "Button Animation Type: " + CustomUISettings.buttonAnimationType.getTypeName();
+			}
+			else if(button.id == 30)
+			{
+				CustomUISettings.armorGuiHud = !CustomUISettings.armorGuiHud;
+				this.useArmorHUD.displayString = "Armor Gui Hud: " + (CustomUISettings.armorGuiHud ? "On" : "Off");
 			}
 			else if(button.id == 1000)
 			{
@@ -167,6 +189,10 @@ public class ConfigGui extends GuiScreen
 			{
 				this.setEditState(SettingEditing.ButtonAnimation);
 			}
+			else if(button.id == 1003)
+			{
+				this.setEditState(SettingEditing.ArmorInfo);
+			}
 		}
 	}
 
@@ -178,14 +204,17 @@ public class ConfigGui extends GuiScreen
 		this.alphaSlider.visible = setting == SettingEditing.BlockHighlight;
 		this.thicknessSlider.visible = setting == SettingEditing.BlockHighlight;
 		this.useDefaultBox.visible = setting == SettingEditing.BlockHighlight;
+		this.highlightAffectedByLight.visible = setting == SettingEditing.BlockHighlight;
 		this.useGuiHighlight.visible = setting == SettingEditing.GuiHighlight;
 		this.hitBoxSettings.visible = setting == SettingEditing.None;
 		this.guiOverlaySettings.visible = setting == SettingEditing.None;
 		this.buttonAnimationSettings.visible = setting == SettingEditing.None;
+		this.armorInfoSettings.visible = setting == SettingEditing.None;
 		this.save.visible = setting != SettingEditing.None;
 		this.useButtonAnimation.visible = setting == SettingEditing.ButtonAnimation;
 		this.buttonAnimationType.visible = setting == SettingEditing.ButtonAnimation;
 		this.animationSpeedSlider.visible = setting == SettingEditing.ButtonAnimation;
+		this.useArmorHUD.visible = setting == SettingEditing.ArmorInfo;
 
 		if(setting == SettingEditing.BlockHighlight)
 		{
@@ -205,7 +234,7 @@ public class ConfigGui extends GuiScreen
 
 	public enum SettingEditing
 	{
-		None, BlockHighlight, GuiHighlight, ButtonAnimation;
+		None, BlockHighlight, GuiHighlight, ButtonAnimation, ArmorInfo;
 	}
 
 	public enum ButtonAnimationType
