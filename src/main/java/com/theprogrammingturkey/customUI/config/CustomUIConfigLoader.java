@@ -164,10 +164,10 @@ public class CustomUIConfigLoader
 		prop.set(enabled);
 		CustomUISettings.armorGuiHud = enabled;
 
-		prop = config.get(aiCat, armorHUDX, false);
+		prop = config.get(aiCat, armorHUDX, 0f);
 		prop.set(CustomUISettings.armorGuiHudX);
 
-		prop = config.get(aiCat, armorHUDY, false);
+		prop = config.get(aiCat, armorHUDY, 0.1f);
 		prop.set(CustomUISettings.armorGuiHudY);
 
 		config.save();
