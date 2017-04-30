@@ -79,9 +79,9 @@ public class BlockHighlightListener
 
 					int blockLight = theWorld.getLightFor(EnumSkyBlock.BLOCK, lightCheckPos);
 					int skyLight = theWorld.getLightFor(EnumSkyBlock.SKY, lightCheckPos) - theWorld.getSkylightSubtracted();
-					float light = (float)(blockLight > skyLight ? blockLight : skyLight) / 15f ;
+					float light = (float) (blockLight > skyLight ? blockLight : skyLight) / 15f;
 					light = light < 0.5f ? 0.5f : light;
-					//System.out.println(light);
+					// System.out.println(light);
 					if(light > 0)
 					{
 						redAmount *= light;
@@ -89,7 +89,7 @@ public class BlockHighlightListener
 						blueAmount *= light;
 						alphaAmount *= light;
 					}
-					//System.out.println(redAmount + " " + greenAmount + " " + blueAmount + " " + alphaAmount);
+					// System.out.println(redAmount + " " + greenAmount + " " + blueAmount + " " + alphaAmount);
 				}
 				RenderGlobal.func_189697_a(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
 			}

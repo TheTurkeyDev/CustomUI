@@ -2,7 +2,6 @@ package com.theprogrammingturkey.customUI.listener;
 
 import java.util.List;
 
-import com.theprogrammingturkey.customUI.CustomUICore;
 import com.theprogrammingturkey.customUI.client.gui.ConfigGui.ButtonAnimationType;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
 import com.theprogrammingturkey.customUI.util.CustomEntry;
@@ -49,18 +48,8 @@ public class GuiListener
 			Slot s = gui.getSlotUnderMouse();
 			if(s == null)
 				return;
-			int left;
-			int top;
-			if(CustomUICore.VERSION.equalsIgnoreCase("@VERSION@"))
-			{
-				left = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiLeft");
-				top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiTop");
-			}
-			else
-			{
-				left = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "field_147003_i");
-				top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "field_147009_r");
-			}
+			int left = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiLeft", "field_147003_i");
+			int top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiTop", "field_147009_r");
 
 			GlStateManager.translate(left, top, 50.0F);
 			int j1 = s.xDisplayPosition;
@@ -78,11 +67,7 @@ public class GuiListener
 	{
 		if(CustomUISettings.buttonAnimation)
 		{
-			List<GuiButton> buttons;
-			if(CustomUICore.VERSION.equalsIgnoreCase("@VERSION@"))
-				buttons = ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, e.getGui(), "buttonList");
-			else
-				buttons = ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, e.getGui(), "field_146292_n");
+			List<GuiButton> buttons = ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, e.getGui(), "buttonList", "field_146292_n");
 
 			if(animationProgress != null && (!animationProgress.getKey().isMouseOver() || !animationProgress.getKey().visible))
 				animationProgress = null;
@@ -169,7 +154,8 @@ public class GuiListener
 				float percent = 1;
 				int color = 0xFFFFFF;
 				GlStateManager.pushMatrix();
-				// System.out.println(RenderUtil.colorIntFromRGBA(0.1f, 0.1f, 0.1f, 0.04f));
+				// System.out.println(RenderUtil.colorIntFromRGBA(0.1f,
+				// 0.1f, 0.1f, 0.04f));
 				boolean drawn = false;
 
 				for(ItemStack stack : player.inventory.armorInventory)
@@ -185,7 +171,10 @@ public class GuiListener
 						percent = ((float) stack.getMaxDamage() - (float) stack.getItemDamage()) / (float) stack.getMaxDamage();
 						irender.renderItemAndEffectIntoGUI(stack, 5, height - offset);
 						color = RenderUtil.colorIntFromRGBA(1 - percent, percent, 0f, 1f);
-						// color = percent > 0.5 ? 0xFFFFFF : percent > 0.25 ? 0xFFFF00 : percent > 0.1 ? 0xFFA500 : 0xFF0000;
+						// color = percent > 0.5 ?
+						// 0xFFFFFF : percent > 0.25 ?
+						// 0xFFFF00 : percent > 0.1 ?
+						// 0xFFA500 : 0xFF0000;
 						frender.drawString("" + (stack.getMaxDamage() - stack.getItemDamage()) + "/" + stack.getMaxDamage(), 25, height - (offset - 4), color);
 					}
 					i++;
