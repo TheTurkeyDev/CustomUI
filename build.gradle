@@ -20,7 +20,7 @@ if (System.getenv('BUILD_NUMBER') != null)
 else
     logger.lifecycle "No build number detected, setting to 0"
 
-group= "com.theprogrammingturkey.customUI.CustomUICore"
+group= "com.theprogrammingturkey.customUI"
 archivesBaseName= "CustomUI"
 version= "${mc_version}-${mod_version}.${buildnumber}"
 
