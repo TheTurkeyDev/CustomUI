@@ -1,12 +1,19 @@
 package com.theprogrammingturkey.customUI.client.gui;
 
+import java.util.ArrayList;
+
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
+import com.theprogrammingturkey.customUI.util.RenderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import scala.actors.threadpool.Arrays;
 
 public class ConfigGui extends GuiScreen
 {
@@ -17,6 +24,7 @@ public class ConfigGui extends GuiScreen
 	private GuiButton buttonAnimationSettings;
 	private GuiButton armorInfoSettings;
 	private GuiButton save;
+	private GuiButton back;
 
 	private GuiScreen parentScreen;
 	private GuiSlider redSlider;
@@ -33,6 +41,9 @@ public class ConfigGui extends GuiScreen
 	private GuiSlider animationSpeedSlider;
 
 	private GuiButton useArmorHUD;
+	private GuiButton armorHUDPosition;
+	private ItemStack[] testItems = { new ItemStack(Items.DIAMOND_BOOTS, 1), new ItemStack(Items.GOLDEN_LEGGINGS, 1), new ItemStack(Items.LEATHER_CHESTPLATE, 1), new ItemStack(Items.IRON_HELMET, 1), new ItemStack(Items.BOW, 1), new ItemStack(Items.STONE_SWORD, 1) };
+	private boolean movingHUD = false;
 
 	private int gradientX = this.width / 2 + 155;
 	private int gradientY = 80;
@@ -54,7 +65,7 @@ public class ConfigGui extends GuiScreen
 		this.buttonList.add(armorInfoSettings = new GuiButton(1003, this.width / 2 + 25, 50, 100, 20, "Armor Info"));
 
 		this.buttonList.add(save = new GuiButton(0, this.width / 2 - 100, this.height - 25, 200, 20, "Save"));
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height - 50, 200, 20, "Back"));
+		this.buttonList.add(back = new GuiButton(1, this.width / 2 - 100, this.height - 50, 200, 20, "Back"));
 
 		this.buttonList.add(redSlider = new GuiSlider(10, "Red", this.width / 2 - 100, 30, 0F, 1F, CustomUISettings.highlightColorR, 0.01F));
 		this.buttonList.add(greenSlider = new GuiSlider(11, "Green", this.width / 2 - 100, 55, 0F, 1F, CustomUISettings.highlightColorG, 0.01F));
@@ -64,16 +75,18 @@ public class ConfigGui extends GuiScreen
 		this.buttonList.add(useDefaultBox = new GuiButton(15, this.width / 2 - 100, 155, 150, 20, "Default selection box: " + (CustomUISettings.includeDefaultHighlight ? "On" : "Off")));
 		this.buttonList.add(useGuiHighlight = new GuiButton(16, this.width / 2 - 100, 130, 150, 20, "Gui Highlight: " + (CustomUISettings.guiHighlight ? "On" : "Off")));
 		this.buttonList.add(highlightAffectedByLight = new GuiButton(17, this.width / 2 - 100, 180, 150, 20, "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off")));
-		
+
 		this.buttonList.add(useButtonAnimation = new GuiButton(20, this.width / 2 - 100, 30, 200, 20, "Button Animations: " + (CustomUISettings.buttonAnimation ? "On" : "Off")));
 		this.buttonList.add(buttonAnimationType = new GuiButton(21, this.width / 2 - 100, 55, 200, 20, "Button Animation Type: " + CustomUISettings.buttonAnimationType.getTypeName()));
 		this.buttonList.add(animationSpeedSlider = new GuiSlider(22, "Speed", this.width / 2 - 75, 80, 0F, 40F, CustomUISettings.buttonAnimationSpeed, 1F));
 
 		this.buttonList.add(useArmorHUD = new GuiButton(30, this.width / 2 - 100, 30, 200, 20, "Armor Gui Hud: " + (CustomUISettings.armorGuiHud ? "On" : "Off")));
+		this.buttonList.add(armorHUDPosition = new GuiButton(31, this.width / 2 - 100, 55, 200, 20, "Change HUD Position"));
 
 		this.setEditState(SettingEditing.None);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
@@ -103,6 +116,21 @@ public class ConfigGui extends GuiScreen
 			savedDelay -= partialTicks;
 			this.drawString(fr, "Saved!", this.width / 2 - 15, this.height - 75, -1);
 		}
+
+		if(movingHUD)
+		{
+			RenderUtil.renderDurabilityHUD(mc, new ArrayList<ItemStack>(Arrays.asList(this.testItems)));
+		}
+	}
+
+	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
+	{
+		if(movingHUD)
+		{
+			ScaledResolution scaledresolution = new ScaledResolution(mc);
+			CustomUISettings.armorGuiHudX = (float) mouseX / (float) scaledresolution.getScaledWidth();
+			CustomUISettings.armorGuiHudY = (float) (scaledresolution.getScaledHeight() - mouseY) / (float) scaledresolution.getScaledHeight();
+		}
 	}
 
 	public void updateScreen()
@@ -121,22 +149,40 @@ public class ConfigGui extends GuiScreen
 		{
 			if(button.id == 0)
 			{
+				boolean goBack = false;
 				if(this.editing == SettingEditing.BlockHighlight)
 				{
 					CustomUIConfigLoader.saveBlockHighlightSettings(alphaSlider.getValue(), redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue(), thicknessSlider.getValueAdjusted(10.0F), CustomUISettings.includeDefaultHighlight, CustomUISettings.highlightAffectedByLight);
+					goBack = true;
 				}
 				else if(this.editing == SettingEditing.GuiHighlight)
 				{
 					CustomUIConfigLoader.saveGuiHighlightSettings(CustomUISettings.guiHighlight, redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
+					goBack = true;
 				}
 				else if(this.editing == SettingEditing.ButtonAnimation)
 				{
 					CustomUIConfigLoader.saveButtonAnimationSettings(CustomUISettings.buttonAnimation, this.animationSpeedSlider.getValueAdjusted(40.0F), CustomUISettings.buttonAnimationType);
+					goBack = true;
 				}
 				else if(this.editing == SettingEditing.ArmorInfo)
 				{
-					CustomUIConfigLoader.saveButtonAnimationSettings(CustomUISettings.buttonAnimation, this.animationSpeedSlider.getValueAdjusted(40.0F), CustomUISettings.buttonAnimationType);
+					if(this.movingHUD)
+					{
+						this.useArmorHUD.visible = true;
+						this.armorHUDPosition.visible = true;
+						this.back.visible = true;
+						this.movingHUD = false;
+					}
+					else
+					{
+						CustomUIConfigLoader.saveArmorInfoSettings(CustomUISettings.armorGuiHud);
+						goBack = true;
+					}
 				}
+
+				if(goBack)
+					this.setEditState(SettingEditing.None);
 
 				savedDelay = 40.0f;
 			}
@@ -177,6 +223,13 @@ public class ConfigGui extends GuiScreen
 				CustomUISettings.armorGuiHud = !CustomUISettings.armorGuiHud;
 				this.useArmorHUD.displayString = "Armor Gui Hud: " + (CustomUISettings.armorGuiHud ? "On" : "Off");
 			}
+			else if(button.id == 31)
+			{
+				this.useArmorHUD.visible = false;
+				this.armorHUDPosition.visible = false;
+				this.back.visible = false;
+				this.movingHUD = true;
+			}
 			else if(button.id == 1000)
 			{
 				this.setEditState(SettingEditing.BlockHighlight);
@@ -215,6 +268,7 @@ public class ConfigGui extends GuiScreen
 		this.buttonAnimationType.visible = setting == SettingEditing.ButtonAnimation;
 		this.animationSpeedSlider.visible = setting == SettingEditing.ButtonAnimation;
 		this.useArmorHUD.visible = setting == SettingEditing.ArmorInfo;
+		this.armorHUDPosition.visible = setting == SettingEditing.ArmorInfo;
 
 		if(setting == SettingEditing.BlockHighlight)
 		{

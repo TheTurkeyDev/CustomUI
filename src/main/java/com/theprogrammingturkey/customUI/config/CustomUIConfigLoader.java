@@ -33,6 +33,8 @@ public class CustomUIConfigLoader
 	public static final String buttonAnimationSpeed = "Button Animation Speed";
 
 	public static final String armorHUD = "Armor Gui Hud";
+	public static final String armorHUDX = "Armor Gui Hud X Position";
+	public static final String armorHUDY = "Armor Gui Hud Y Position";
 
 	public static void loadConfigSettings(File file)
 	{
@@ -71,6 +73,8 @@ public class CustomUIConfigLoader
 		CustomUISettings.buttonAnimationSpeed = config.getFloat(buttonAnimationSpeed, baCat, 5F, 1F, 40F, "How fast the animation should occur. (lower is faster)");
 
 		CustomUISettings.armorGuiHud = config.getBoolean(armorHUD, aiCat, false, "Set to true to enable the gui hud for armor info ingame");
+		CustomUISettings.armorGuiHudX = config.getFloat(armorHUDX, aiCat, 0F, 0F, 1F, "X position of the hud for armor info ingame");
+		CustomUISettings.armorGuiHudY = config.getFloat(armorHUDY, aiCat, 0.1F, 0F, 1F, "Y position of the hud for armor info ingame");
 
 		config.save();
 	}
@@ -159,6 +163,12 @@ public class CustomUIConfigLoader
 		Property prop = config.get(aiCat, armorHUD, false);
 		prop.set(enabled);
 		CustomUISettings.armorGuiHud = enabled;
+
+		prop = config.get(aiCat, armorHUDX, false);
+		prop.set(CustomUISettings.armorGuiHudX);
+
+		prop = config.get(aiCat, armorHUDY, false);
+		prop.set(CustomUISettings.armorGuiHudY);
 
 		config.save();
 	}
