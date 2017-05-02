@@ -11,6 +11,7 @@ public class CustomUISettings
 	public static float highlightColorA = 0.0F;
 	public static float highlightLineThickness = 2.0F;
 	public static boolean highlightAffectedByLight = true;
+	public static boolean highlightBlockFaces = true;
 
 	public static boolean guiHighlight = false;
 	public static float guihighlightColorR = 0.0F;

@@ -35,6 +35,7 @@ public class ConfigGui extends GuiScreen
 	private GuiButton useDefaultBox;
 	private GuiButton useGuiHighlight;
 	private GuiButton highlightAffectedByLight;
+	private GuiButton highlightBlockFaces;
 
 	private GuiButton useButtonAnimation;
 	private GuiButton buttonAnimationType;
@@ -75,6 +76,7 @@ public class ConfigGui extends GuiScreen
 		this.buttonList.add(useDefaultBox = new GuiButton(15, this.width / 2 - 100, 155, 150, 20, "Default selection box: " + (CustomUISettings.includeDefaultHighlight ? "On" : "Off")));
 		this.buttonList.add(useGuiHighlight = new GuiButton(16, this.width / 2 - 100, 130, 150, 20, "Gui Highlight: " + (CustomUISettings.guiHighlight ? "On" : "Off")));
 		this.buttonList.add(highlightAffectedByLight = new GuiButton(17, this.width / 2 - 100, 180, 150, 20, "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off")));
+		this.buttonList.add(highlightBlockFaces = new GuiButton(18, this.width / 2 - 100, 205, 150, 20, "Highlight Block Faces: " + (CustomUISettings.highlightBlockFaces ? "On" : "Off")));
 
 		this.buttonList.add(useButtonAnimation = new GuiButton(20, this.width / 2 - 100, 30, 200, 20, "Button Animations: " + (CustomUISettings.buttonAnimation ? "On" : "Off")));
 		this.buttonList.add(buttonAnimationType = new GuiButton(21, this.width / 2 - 100, 55, 200, 20, "Button Animation Type: " + CustomUISettings.buttonAnimationType.getTypeName()));
@@ -152,7 +154,7 @@ public class ConfigGui extends GuiScreen
 				boolean goBack = false;
 				if(this.editing == SettingEditing.BlockHighlight)
 				{
-					CustomUIConfigLoader.saveBlockHighlightSettings(alphaSlider.getValue(), redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue(), thicknessSlider.getValueAdjusted(10.0F), CustomUISettings.includeDefaultHighlight, CustomUISettings.highlightAffectedByLight);
+					CustomUIConfigLoader.saveBlockHighlightSettings(alphaSlider.getValue(), redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue(), thicknessSlider.getValueAdjusted(10.0F));
 					goBack = true;
 				}
 				else if(this.editing == SettingEditing.GuiHighlight)
@@ -208,6 +210,11 @@ public class ConfigGui extends GuiScreen
 				CustomUISettings.highlightAffectedByLight = !CustomUISettings.highlightAffectedByLight;
 				highlightAffectedByLight.displayString = "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off");
 			}
+			else if(button.id == 18)
+			{
+				CustomUISettings.highlightBlockFaces = !CustomUISettings.highlightBlockFaces;
+				this.highlightBlockFaces.displayString = "Highlight Block Faces: " + (CustomUISettings.highlightBlockFaces ? "On" : "Off");
+			}
 			else if(button.id == 20)
 			{
 				CustomUISettings.buttonAnimation = !CustomUISettings.buttonAnimation;
@@ -258,6 +265,7 @@ public class ConfigGui extends GuiScreen
 		this.thicknessSlider.visible = setting == SettingEditing.BlockHighlight;
 		this.useDefaultBox.visible = setting == SettingEditing.BlockHighlight;
 		this.highlightAffectedByLight.visible = setting == SettingEditing.BlockHighlight;
+		this.highlightBlockFaces.visible = setting == SettingEditing.BlockHighlight;
 		this.useGuiHighlight.visible = setting == SettingEditing.GuiHighlight;
 		this.hitBoxSettings.visible = setting == SettingEditing.None;
 		this.guiOverlaySettings.visible = setting == SettingEditing.None;

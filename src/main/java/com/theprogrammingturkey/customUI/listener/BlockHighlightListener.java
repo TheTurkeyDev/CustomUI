@@ -91,7 +91,11 @@ public class BlockHighlightListener
 					}
 					// System.out.println(redAmount + " " + greenAmount + " " + blueAmount + " " + alphaAmount);
 				}
-				RenderGlobal.func_189697_a(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
+
+				if(CustomUISettings.highlightBlockFaces)
+					RenderGlobal.func_189696_b(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
+
+				RenderGlobal.func_189697_a(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, 1f);
 			}
 
 			GlStateManager.depthMask(true);
