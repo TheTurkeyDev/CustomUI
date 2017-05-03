@@ -117,13 +117,12 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveGuiHighlightSettings(boolean useGuiHighlgiht, float r, float g, float b)
+	public static void saveGuiHighlightSettings(float r, float g, float b)
 	{
 		config.load();
 
 		Property prop = config.get(ghCat, guiHighlight, false);
-		prop.set(useGuiHighlgiht);
-		CustomUISettings.guiHighlight = useGuiHighlgiht;
+		prop.set(CustomUISettings.guiHighlight);
 
 		prop = config.get(ghCat, redAmount, 0F);
 		prop.set(r);
@@ -140,13 +139,12 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveButtonAnimationSettings(boolean enabled, float speed, ButtonAnimationType animationType)
+	public static void saveButtonAnimationSettings(float speed, ButtonAnimationType animationType)
 	{
 		config.load();
 
 		Property prop = config.get(baCat, buttonAnimation, false);
-		prop.set(enabled);
-		CustomUISettings.buttonAnimation = enabled;
+		prop.set(CustomUISettings.buttonAnimation);
 
 		prop = config.get(baCat, buttonAnimationSpeed, 5F);
 		prop.set(speed);
@@ -159,13 +157,12 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveArmorInfoSettings(boolean enabled)
+	public static void saveArmorInfoSettings()
 	{
 		config.load();
 
 		Property prop = config.get(aiCat, armorHUD, false);
-		prop.set(enabled);
-		CustomUISettings.armorGuiHud = enabled;
+		prop.set(CustomUISettings.armorGuiHud);
 
 		prop = config.get(aiCat, armorHUDX, 0f);
 		prop.set(CustomUISettings.armorGuiHudX);

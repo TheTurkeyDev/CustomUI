@@ -23,8 +23,6 @@ public class ConfigGui extends GuiScreen
 	private GuiButton guiOverlaySettings;
 	private GuiButton buttonAnimationSettings;
 	private GuiButton armorInfoSettings;
-	private GuiButton save;
-	private GuiButton back;
 
 	private GuiScreen parentScreen;
 	private GuiSlider redSlider;
@@ -49,8 +47,8 @@ public class ConfigGui extends GuiScreen
 	private int gradientX = this.width / 2 + 155;
 	private int gradientY = 80;
 
-	private float savedDelay = 0;
 	public static boolean buttonPressedThisUpdate = false;
+	private GuiSlider trackedSliderSelected = null;
 
 	public ConfigGui(GuiScreen parent)
 	{
@@ -65,8 +63,7 @@ public class ConfigGui extends GuiScreen
 		this.buttonList.add(buttonAnimationSettings = new GuiButton(1002, this.width / 2 - 125, 50, 100, 20, "Button Animations"));
 		this.buttonList.add(armorInfoSettings = new GuiButton(1003, this.width / 2 + 25, 50, 100, 20, "Armor Info"));
 
-		this.buttonList.add(save = new GuiButton(0, this.width / 2 - 100, this.height - 25, 200, 20, "Save"));
-		this.buttonList.add(back = new GuiButton(1, this.width / 2 - 100, this.height - 50, 200, 20, "Back"));
+		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, 200, 20, "Back"));
 
 		this.buttonList.add(redSlider = new GuiSlider(10, "Red", this.width / 2 - 100, 30, 0F, 1F, CustomUISettings.highlightColorR, 0.01F));
 		this.buttonList.add(greenSlider = new GuiSlider(11, "Green", this.width / 2 - 100, 55, 0F, 1F, CustomUISettings.highlightColorG, 0.01F));
@@ -107,16 +104,10 @@ public class ConfigGui extends GuiScreen
 		else if(this.editing == SettingEditing.GuiHighlight)
 		{
 			this.drawString(fr, "Gui Highlight color", this.width / 2 - 75, 10, -1);
-			int argb = (alphaSlider.getValueAdjusted(255) << 24) | (redSlider.getValueAdjusted(255) << 16) | (greenSlider.getValueAdjusted(255) << 8) | blueSlider.getValueAdjusted(255);
+			int argb = (255 << 24) | (redSlider.getValueAdjusted(255) << 16) | (greenSlider.getValueAdjusted(255) << 8) | blueSlider.getValueAdjusted(255);
 			gradientX = this.width / 2 + 120;
 			this.drawGradientRect(gradientX - 5, gradientY - 5, gradientX + 37, gradientY + 37, -1, -1);
 			this.drawGradientRect(gradientX, gradientY, gradientX + 32, gradientY + 32, argb, argb);
-		}
-
-		if(savedDelay > 0)
-		{
-			savedDelay -= partialTicks;
-			this.drawString(fr, "Saved!", this.width / 2 - 15, this.height - 75, -1);
 		}
 
 		if(movingHUD)
@@ -151,20 +142,25 @@ public class ConfigGui extends GuiScreen
 		{
 			if(button.id == 0)
 			{
+
 				boolean goBack = false;
-				if(this.editing == SettingEditing.BlockHighlight)
+				if(this.editing == SettingEditing.None)
+				{
+					this.mc.displayGuiScreen(this.parentScreen);
+				}
+				else if(this.editing == SettingEditing.BlockHighlight)
 				{
 					CustomUIConfigLoader.saveBlockHighlightSettings(alphaSlider.getValue(), redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue(), thicknessSlider.getValueAdjusted(10.0F));
 					goBack = true;
 				}
 				else if(this.editing == SettingEditing.GuiHighlight)
 				{
-					CustomUIConfigLoader.saveGuiHighlightSettings(CustomUISettings.guiHighlight, redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
+					CustomUIConfigLoader.saveGuiHighlightSettings(redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
 					goBack = true;
 				}
 				else if(this.editing == SettingEditing.ButtonAnimation)
 				{
-					CustomUIConfigLoader.saveButtonAnimationSettings(CustomUISettings.buttonAnimation, this.animationSpeedSlider.getValueAdjusted(40.0F), CustomUISettings.buttonAnimationType);
+					CustomUIConfigLoader.saveButtonAnimationSettings(this.animationSpeedSlider.getValueAdjusted(40.0F), CustomUISettings.buttonAnimationType);
 					goBack = true;
 				}
 				else if(this.editing == SettingEditing.ArmorInfo)
@@ -173,26 +169,16 @@ public class ConfigGui extends GuiScreen
 					{
 						this.useArmorHUD.visible = true;
 						this.armorHUDPosition.visible = true;
-						this.back.visible = true;
 						this.movingHUD = false;
 					}
 					else
 					{
-						CustomUIConfigLoader.saveArmorInfoSettings(CustomUISettings.armorGuiHud);
+						CustomUIConfigLoader.saveArmorInfoSettings();
 						goBack = true;
 					}
 				}
 
 				if(goBack)
-					this.setEditState(SettingEditing.None);
-
-				savedDelay = 40.0f;
-			}
-			else if(button.id == 1)
-			{
-				if(this.editing == SettingEditing.None)
-					this.mc.displayGuiScreen(this.parentScreen);
-				else
 					this.setEditState(SettingEditing.None);
 			}
 			else if(button.id == 15)
@@ -225,6 +211,10 @@ public class ConfigGui extends GuiScreen
 				CustomUISettings.buttonAnimationType = CustomUISettings.buttonAnimationType.getNext();
 				this.buttonAnimationType.displayString = "Button Animation Type: " + CustomUISettings.buttonAnimationType.getTypeName();
 			}
+			else if(button.id == 22)
+			{
+				trackedSliderSelected = this.animationSpeedSlider;
+			}
 			else if(button.id == 30)
 			{
 				CustomUISettings.armorGuiHud = !CustomUISettings.armorGuiHud;
@@ -234,7 +224,6 @@ public class ConfigGui extends GuiScreen
 			{
 				this.useArmorHUD.visible = false;
 				this.armorHUDPosition.visible = false;
-				this.back.visible = false;
 				this.movingHUD = true;
 			}
 			else if(button.id == 1000)
@@ -256,6 +245,19 @@ public class ConfigGui extends GuiScreen
 		}
 	}
 
+	protected void mouseReleased(int mouseX, int mouseY, int state)
+	{
+		super.mouseReleased(mouseX, mouseY, state);
+		if(trackedSliderSelected != null)
+		{
+			if(trackedSliderSelected.id == 22)
+			{
+				CustomUISettings.buttonAnimationSpeed = this.animationSpeedSlider.getValueAdjusted(40.0F);
+				trackedSliderSelected = null;
+			}
+		}
+	}
+
 	public void setEditState(SettingEditing setting)
 	{
 		this.redSlider.visible = (setting == SettingEditing.BlockHighlight || setting == SettingEditing.GuiHighlight);
@@ -271,7 +273,6 @@ public class ConfigGui extends GuiScreen
 		this.guiOverlaySettings.visible = setting == SettingEditing.None;
 		this.buttonAnimationSettings.visible = setting == SettingEditing.None;
 		this.armorInfoSettings.visible = setting == SettingEditing.None;
-		this.save.visible = setting != SettingEditing.None;
 		this.useButtonAnimation.visible = setting == SettingEditing.ButtonAnimation;
 		this.buttonAnimationType.visible = setting == SettingEditing.ButtonAnimation;
 		this.animationSpeedSlider.visible = setting == SettingEditing.ButtonAnimation;
