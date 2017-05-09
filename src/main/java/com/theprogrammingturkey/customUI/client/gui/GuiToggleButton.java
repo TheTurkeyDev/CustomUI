@@ -10,7 +10,7 @@ public class GuiToggleButton extends GuiButton
 
 	public GuiToggleButton(int buttonId, int x, int y, int widthIn, int heightIn, String display, boolean enabled)
 	{
-		super(buttonId, x, y, widthIn, heightIn, display + (enabled ? "True" : "False"));
+		super(buttonId, x, y, widthIn, heightIn, display + (enabled ? "On" : "Off"));
 		this.baseDisplay = display;
 		this.toggle = enabled;
 	}
@@ -23,7 +23,7 @@ public class GuiToggleButton extends GuiButton
 		if(clicked)
 		{
 			toggle = !toggle;
-			displayString = baseDisplay + (toggle ? "True" : "False");
+			displayString = baseDisplay + (toggle ? "On" : "Off");
 		}
 
 		return clicked;

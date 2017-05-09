@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
+import com.theprogrammingturkey.customUI.util.MathUtil;
 import com.theprogrammingturkey.customUI.util.RenderUtil;
 
 import net.minecraft.client.Minecraft;
@@ -121,8 +122,8 @@ public class ConfigGui extends GuiScreen
 		if(movingHUD)
 		{
 			ScaledResolution scaledresolution = new ScaledResolution(mc);
-			CustomUISettings.armorGuiHudX = (float) mouseX / (float) scaledresolution.getScaledWidth();
-			CustomUISettings.armorGuiHudY = (float) (scaledresolution.getScaledHeight() - mouseY) / (float) scaledresolution.getScaledHeight();
+			CustomUISettings.armorGuiHudX = MathUtil.clamp(0f, 1f, (float) (mouseX - 45) / (float) scaledresolution.getScaledWidth());
+			CustomUISettings.armorGuiHudY = MathUtil.clamp(0f, 1f, (float) (scaledresolution.getScaledHeight() - mouseY - 50) / (float) scaledresolution.getScaledHeight());
 		}
 	}
 
