@@ -14,18 +14,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class BlockHighlightListener {
+public class BlockHighlightListener
+{
 
 	@SubscribeEvent
-	public void onBlockOutlineRender(DrawBlockHighlightEvent e) {
+	public void onBlockOutlineRender(DrawBlockHighlightEvent e)
+	{
 		this.drawSelectionBox(e.getPlayer(), e.getTarget(), e.getSubID(), e.getPartialTicks());
-		if (!CustomUISettings.includeDefaultHighlight)
+		if(!CustomUISettings.includeDefaultHighlight)
 			e.setCanceled(true);
 	}
 
-	public void drawSelectionBox(EntityPlayer player, RayTraceResult movingObjectPositionIn, int execute, float partialTicks) {
+	public void drawSelectionBox(EntityPlayer player, RayTraceResult movingObjectPositionIn, int execute, float partialTicks)
+	{
 		World theWorld = player.getEntityWorld();
-		if (execute == 0 && movingObjectPositionIn.typeOfHit == RayTraceResult.Type.BLOCK) {
+		if(execute == 0 && movingObjectPositionIn.typeOfHit == RayTraceResult.Type.BLOCK)
+		{
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 			GlStateManager.glLineWidth(CustomUISettings.highlightLineThickness);
@@ -34,7 +38,8 @@ public class BlockHighlightListener {
 			BlockPos blockpos = movingObjectPositionIn.getBlockPos();
 			IBlockState iblockstate = theWorld.getBlockState(blockpos);
 
-			if (iblockstate.getMaterial() != Material.AIR && theWorld.getWorldBorder().contains(blockpos)) {
+			if(iblockstate.getMaterial() != Material.AIR && theWorld.getWorldBorder().contains(blockpos))
+			{
 				double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
 				double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 				double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
@@ -43,31 +48,33 @@ public class BlockHighlightListener {
 				float blueAmount = CustomUISettings.highlightColorB;
 				float alphaAmount = CustomUISettings.highlightColorA;
 
-				if (CustomUISettings.highlightAffectedByLight) {
+				if(CustomUISettings.highlightAffectedByLight)
+				{
 					BlockPos lightCheckPos;
 
-					switch (movingObjectPositionIn.sideHit) {
-					case DOWN:
-						lightCheckPos = blockpos.add(0, -1, 0);
-						break;
-					case EAST:
-						lightCheckPos = blockpos.add(1, 0, 0);
-						break;
-					case NORTH:
-						lightCheckPos = blockpos.add(0, 0, -1);
-						break;
-					case SOUTH:
-						lightCheckPos = blockpos.add(0, 0, 1);
-						break;
-					case UP:
-						lightCheckPos = blockpos.add(0, 1, 0);
-						break;
-					case WEST:
-						lightCheckPos = blockpos.add(-1, 0, 0);
-						break;
-					default:
-						lightCheckPos = blockpos;
-						break;
+					switch(movingObjectPositionIn.sideHit)
+					{
+						case DOWN:
+							lightCheckPos = blockpos.add(0, -1, 0);
+							break;
+						case EAST:
+							lightCheckPos = blockpos.add(1, 0, 0);
+							break;
+						case NORTH:
+							lightCheckPos = blockpos.add(0, 0, -1);
+							break;
+						case SOUTH:
+							lightCheckPos = blockpos.add(0, 0, 1);
+							break;
+						case UP:
+							lightCheckPos = blockpos.add(0, 1, 0);
+							break;
+						case WEST:
+							lightCheckPos = blockpos.add(-1, 0, 0);
+							break;
+						default:
+							lightCheckPos = blockpos;
+							break;
 					}
 
 					int blockLight = theWorld.getLightFor(EnumSkyBlock.BLOCK, lightCheckPos);
@@ -75,7 +82,8 @@ public class BlockHighlightListener {
 					float light = (float) (blockLight > skyLight ? blockLight : skyLight) / 15f;
 					light = light < 0.5f ? 0.5f : light;
 					// System.out.println(light);
-					if (light > 0) {
+					if(light > 0)
+					{
 						redAmount *= light;
 						greenAmount *= light;
 						blueAmount *= light;
@@ -85,6 +93,9 @@ public class BlockHighlightListener {
 					// greenAmount + " " + blueAmount + " "
 					// + alphaAmount);
 				}
+				if(CustomUISettings.highlightBlockFaces)
+					RenderGlobal.renderFilledBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
+
 				RenderGlobal.drawSelectionBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
 			}
 

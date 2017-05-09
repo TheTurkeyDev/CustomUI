@@ -18,21 +18,24 @@ public class CustomUIConfigLoader
 	public static final String aiCat = "Armor Info Settings";
 
 	public static final String thicknessAmount = "Highlight Line Thickness";
-	public static final String defaultHighlight = "includeDefaultHighlight";
-	public static final String dimHighlight = "highlightAffectedByLight";
+	public static final String defaultHighlight = "include Default Highlight";
+	public static final String dimHighlight = "highlight Affected By Light";
+	public static final String faceHighlight = "Highlight Block Faces";
 
 	public static final String guiHighlight = "Gui Slot Highlighting";
 
 	public static final String redAmount = "Highlight red amount";
 	public static final String greenAmount = "Highlight green amount";
 	public static final String blueAmount = "Highlight blue amount";
-	public static final String alphaAmount = "Highlight alpha amount";
+	public static final String alphaAmount = "Block Face Highlight alpha amount";
 
 	public static final String buttonAnimation = "Button Animations";
 	public static final String buttonAnimationType = "Button Animation Type";
 	public static final String buttonAnimationSpeed = "Button Animation Speed";
 
 	public static final String armorHUD = "Armor Gui Hud";
+	public static final String armorHUDX = "Armor Gui Hud X Position";
+	public static final String armorHUDY = "Armor Gui Hud Y Position";
 
 	public static void loadConfigSettings(File file)
 	{
@@ -57,9 +60,10 @@ public class CustomUIConfigLoader
 		CustomUISettings.highlightColorR = config.getFloat(redAmount, bhCat, 0F, 0F, 1F, "Red color value to be mixed into the the block hightlight overall color");
 		CustomUISettings.highlightColorG = config.getFloat(greenAmount, bhCat, 0F, 0F, 1F, "Green color value to be mixed into the the block hightlight overall color");
 		CustomUISettings.highlightColorB = config.getFloat(blueAmount, bhCat, 0F, 0F, 1F, "Blue color value to be mixed into the the block hightlight overall color");
-		CustomUISettings.highlightColorA = config.getFloat(alphaAmount, bhCat, 0.4F, 0F, 1F, "Alpha amount for block hightlight overall. I.e. line clearness");
+		CustomUISettings.highlightColorA = config.getFloat(alphaAmount, bhCat, 0.3F, 0F, 1F, "Alpha amount for block face hightlight overall");
 		CustomUISettings.highlightLineThickness = config.getFloat(thicknessAmount, bhCat, 2F, 1F, 10F, "How thick the highlight line should be.");
 		CustomUISettings.highlightAffectedByLight = config.getBoolean(dimHighlight, bhCat, false, "Set to true for the block highlight to dim to match the blocks light level");
+		CustomUISettings.highlightBlockFaces = config.getBoolean(faceHighlight, bhCat, false, "Set to true for block faces to be highlighted aswell");
 
 		CustomUISettings.guiHighlight = config.getBoolean(guiHighlight, ghCat, false, "Set to true to enable highlighting the currently hovered slot.");
 		CustomUISettings.guihighlightColorR = config.getFloat(redAmount, ghCat, 0F, 0F, 1F, "Red color value to be mixed into the the gui hightlight overall color");
@@ -71,17 +75,18 @@ public class CustomUIConfigLoader
 		CustomUISettings.buttonAnimationSpeed = config.getFloat(buttonAnimationSpeed, baCat, 5F, 1F, 40F, "How fast the animation should occur. (lower is faster)");
 
 		CustomUISettings.armorGuiHud = config.getBoolean(armorHUD, aiCat, false, "Set to true to enable the gui hud for armor info ingame");
+		CustomUISettings.armorGuiHudX = config.getFloat(armorHUDX, aiCat, 0F, 0F, 1F, "X position of the hud for armor info ingame");
+		CustomUISettings.armorGuiHudY = config.getFloat(armorHUDY, aiCat, 0.1F, 0F, 1F, "Y position of the hud for armor info ingame");
 
 		config.save();
 	}
 
-	public static void saveBlockHighlightSettings(float a, float r, float g, float b, float thickness, boolean override, boolean dim)
+	public static void saveBlockHighlightSettings(float a, float r, float g, float b, float thickness)
 	{
 		config.load();
 
 		Property prop = config.get(bhCat, defaultHighlight, false);
-		prop.set(override);
-		CustomUISettings.includeDefaultHighlight = override;
+		prop.set(CustomUISettings.includeDefaultHighlight);
 
 		prop = config.get(bhCat, redAmount, 0F);
 		prop.set(r);
@@ -95,7 +100,7 @@ public class CustomUIConfigLoader
 		prop.set(b);
 		CustomUISettings.highlightColorB = b;
 
-		prop = config.get(bhCat, alphaAmount, 1F);
+		prop = config.get(bhCat, alphaAmount, 0.3F);
 		prop.set(a);
 		CustomUISettings.highlightColorA = a;
 
@@ -104,19 +109,20 @@ public class CustomUIConfigLoader
 		CustomUISettings.highlightLineThickness = thickness;
 
 		prop = config.get(bhCat, dimHighlight, false);
-		prop.set(dim);
-		CustomUISettings.highlightAffectedByLight = dim;
+		prop.set(CustomUISettings.highlightAffectedByLight);
 
+		prop = config.get(bhCat, faceHighlight, false);
+		prop.set(CustomUISettings.highlightBlockFaces);
+		
 		config.save();
 	}
 
-	public static void saveGuiHighlightSettings(boolean useGuiHighlgiht, float r, float g, float b)
+	public static void saveGuiHighlightSettings(float r, float g, float b)
 	{
 		config.load();
 
 		Property prop = config.get(ghCat, guiHighlight, false);
-		prop.set(useGuiHighlgiht);
-		CustomUISettings.guiHighlight = useGuiHighlgiht;
+		prop.set(CustomUISettings.guiHighlight);
 
 		prop = config.get(ghCat, redAmount, 0F);
 		prop.set(r);
@@ -133,13 +139,12 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveButtonAnimationSettings(boolean enabled, float speed, ButtonAnimationType animationType)
+	public static void saveButtonAnimationSettings(float speed, ButtonAnimationType animationType)
 	{
 		config.load();
 
 		Property prop = config.get(baCat, buttonAnimation, false);
-		prop.set(enabled);
-		CustomUISettings.buttonAnimation = enabled;
+		prop.set(CustomUISettings.buttonAnimation);
 
 		prop = config.get(baCat, buttonAnimationSpeed, 5F);
 		prop.set(speed);
@@ -152,13 +157,18 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveArmorInfoSettings(boolean enabled)
+	public static void saveArmorInfoSettings()
 	{
 		config.load();
 
 		Property prop = config.get(aiCat, armorHUD, false);
-		prop.set(enabled);
-		CustomUISettings.armorGuiHud = enabled;
+		prop.set(CustomUISettings.armorGuiHud);
+
+		prop = config.get(aiCat, armorHUDX, 0f);
+		prop.set(CustomUISettings.armorGuiHudX);
+
+		prop = config.get(aiCat, armorHUDY, 0.1f);
+		prop.set(CustomUISettings.armorGuiHudY);
 
 		config.save();
 	}
