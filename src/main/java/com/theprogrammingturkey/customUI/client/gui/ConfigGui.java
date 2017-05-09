@@ -30,16 +30,16 @@ public class ConfigGui extends GuiScreen
 	private GuiSlider blueSlider;
 	private GuiSlider alphaSlider;
 	private GuiSlider thicknessSlider;
-	private GuiButton useDefaultBox;
-	private GuiButton useGuiHighlight;
-	private GuiButton highlightAffectedByLight;
-	private GuiButton highlightBlockFaces;
+	private GuiToggleButton useDefaultBox;
+	private GuiToggleButton useGuiHighlight;
+	private GuiToggleButton highlightAffectedByLight;
+	private GuiToggleButton highlightBlockFaces;
 
-	private GuiButton useButtonAnimation;
+	private GuiToggleButton useButtonAnimation;
 	private GuiButton buttonAnimationType;
 	private GuiSlider animationSpeedSlider;
 
-	private GuiButton useArmorHUD;
+	private GuiToggleButton useArmorHUD;
 	private GuiButton armorHUDPosition;
 	private ItemStack[] testItems = { new ItemStack(Items.DIAMOND_BOOTS, 1), new ItemStack(Items.GOLDEN_LEGGINGS, 1), new ItemStack(Items.LEATHER_CHESTPLATE, 1), new ItemStack(Items.IRON_HELMET, 1), new ItemStack(Items.BOW, 1), new ItemStack(Items.STONE_SWORD, 1) };
 	private boolean movingHUD = false;
@@ -70,16 +70,16 @@ public class ConfigGui extends GuiScreen
 		this.buttonList.add(blueSlider = new GuiSlider(12, "Blue", this.width / 2 - 100, 80, 0F, 1F, CustomUISettings.highlightColorB, 0.01F));
 		this.buttonList.add(alphaSlider = new GuiSlider(13, "Alpha", this.width / 2 - 100, 105, 0F, 1F, CustomUISettings.highlightColorA, 0.01F));
 		this.buttonList.add(thicknessSlider = new GuiSlider(14, "Thickness", this.width / 2 - 100, 130, 1F, 10F, CustomUISettings.highlightLineThickness, 0.5F));
-		this.buttonList.add(useDefaultBox = new GuiButton(15, this.width / 2 - 100, 155, 150, 20, "Default selection box: " + (CustomUISettings.includeDefaultHighlight ? "On" : "Off")));
-		this.buttonList.add(useGuiHighlight = new GuiButton(16, this.width / 2 - 100, 130, 150, 20, "Gui Highlight: " + (CustomUISettings.guiHighlight ? "On" : "Off")));
-		this.buttonList.add(highlightAffectedByLight = new GuiButton(17, this.width / 2 - 100, 180, 150, 20, "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off")));
-		this.buttonList.add(highlightBlockFaces = new GuiButton(18, this.width / 2 - 100, 205, 150, 20, "Highlight Block Faces: " + (CustomUISettings.highlightBlockFaces ? "On" : "Off")));
+		this.buttonList.add(useDefaultBox = new GuiToggleButton(15, this.width / 2 - 100, 155, 150, 20, "Default selection box: ", CustomUISettings.includeDefaultHighlight));
+		this.buttonList.add(useGuiHighlight = new GuiToggleButton(16, this.width / 2 - 100, 130, 150, 20, "Gui Highlight: ", CustomUISettings.guiHighlight));
+		this.buttonList.add(highlightAffectedByLight = new GuiToggleButton(17, this.width / 2 - 100, 180, 150, 20, "Highlight Dim: ", CustomUISettings.highlightAffectedByLight));
+		this.buttonList.add(highlightBlockFaces = new GuiToggleButton(18, this.width / 2 - 100, 205, 150, 20, "Highlight Block Faces: ", CustomUISettings.highlightBlockFaces));
 
-		this.buttonList.add(useButtonAnimation = new GuiButton(20, this.width / 2 - 100, 30, 200, 20, "Button Animations: " + (CustomUISettings.buttonAnimation ? "On" : "Off")));
+		this.buttonList.add(useButtonAnimation = new GuiToggleButton(20, this.width / 2 - 100, 30, 200, 20, "Button Animations: ", CustomUISettings.buttonAnimation));
 		this.buttonList.add(buttonAnimationType = new GuiButton(21, this.width / 2 - 100, 55, 200, 20, "Button Animation Type: " + CustomUISettings.buttonAnimationType.getTypeName()));
 		this.buttonList.add(animationSpeedSlider = new GuiSlider(22, "Speed", this.width / 2 - 75, 80, 0F, 40F, CustomUISettings.buttonAnimationSpeed, 1F));
 
-		this.buttonList.add(useArmorHUD = new GuiButton(30, this.width / 2 - 100, 30, 200, 20, "Armor Gui Hud: " + (CustomUISettings.armorGuiHud ? "On" : "Off")));
+		this.buttonList.add(useArmorHUD = new GuiToggleButton(30, this.width / 2 - 100, 30, 200, 20, "Armor Gui Hud: ", CustomUISettings.armorGuiHud));
 		this.buttonList.add(armorHUDPosition = new GuiButton(31, this.width / 2 - 100, 55, 200, 20, "Change HUD Position"));
 
 		this.setEditState(SettingEditing.None);
@@ -184,27 +184,22 @@ public class ConfigGui extends GuiScreen
 			else if(button.id == 15)
 			{
 				CustomUISettings.includeDefaultHighlight = !CustomUISettings.includeDefaultHighlight;
-				useDefaultBox.displayString = "Default selection box: " + (CustomUISettings.includeDefaultHighlight ? "On" : "Off");
 			}
 			else if(button.id == 16)
 			{
 				CustomUISettings.guiHighlight = !CustomUISettings.guiHighlight;
-				useGuiHighlight.displayString = "Gui Highlight: " + (CustomUISettings.guiHighlight ? "On" : "Off");
 			}
 			else if(button.id == 17)
 			{
 				CustomUISettings.highlightAffectedByLight = !CustomUISettings.highlightAffectedByLight;
-				highlightAffectedByLight.displayString = "Highlight Dim: " + (CustomUISettings.highlightAffectedByLight ? "On" : "Off");
 			}
 			else if(button.id == 18)
 			{
 				CustomUISettings.highlightBlockFaces = !CustomUISettings.highlightBlockFaces;
-				this.highlightBlockFaces.displayString = "Highlight Block Faces: " + (CustomUISettings.highlightBlockFaces ? "On" : "Off");
 			}
 			else if(button.id == 20)
 			{
 				CustomUISettings.buttonAnimation = !CustomUISettings.buttonAnimation;
-				useButtonAnimation.displayString = "Button Animations: " + (CustomUISettings.buttonAnimation ? "On" : "Off");
 			}
 			else if(button.id == 21)
 			{
@@ -218,7 +213,6 @@ public class ConfigGui extends GuiScreen
 			else if(button.id == 30)
 			{
 				CustomUISettings.armorGuiHud = !CustomUISettings.armorGuiHud;
-				this.useArmorHUD.displayString = "Armor Gui Hud: " + (CustomUISettings.armorGuiHud ? "On" : "Off");
 			}
 			else if(button.id == 31)
 			{
