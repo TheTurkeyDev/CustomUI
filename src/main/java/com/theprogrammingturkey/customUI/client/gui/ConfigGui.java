@@ -62,9 +62,9 @@ public class ConfigGui extends GuiScreen
 
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, 200, 20, "Back"));
 
-		boxOutlineColorSelelection = new GuiColorSelection("Block Highligt Outline", this.buttonList, 10, this.width / 2 - 100, 30);
+		boxOutlineColorSelelection = new GuiColorSelection("Block Highlight Outline", this.buttonList, 10, this.width / 2 - 100, 30);
 		boxOutlineColorSelelection.setCurrentValues(CustomUISettings.highlightColorR, CustomUISettings.highlightColorG, CustomUISettings.highlightColorB, CustomUISettings.highlightColorA);
-		boxFillColorSelelection = new GuiColorSelection("Block Highligt Fill", this.buttonList, 19, this.width / 2 - 100, 150);
+		boxFillColorSelelection = new GuiColorSelection("Block Highlight Fill", this.buttonList, 19, this.width / 2 - 100, 150);
 		boxFillColorSelelection.setCurrentValues(CustomUISettings.fillColorR, CustomUISettings.fillColorG, CustomUISettings.fillColorB, CustomUISettings.fillColorA);
 
 		this.buttonList.add(thicknessSlider = new GuiSlider(14, "Thickness", this.width / 2 - 100, 270, 1F, 10F, CustomUISettings.highlightLineThickness, 0.5F));

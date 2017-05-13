@@ -72,7 +72,7 @@ public class CustomUIConfigLoader
 		CustomUISettings.guihighlightColorR = config.getFloat(redAmount, ghCat, 0F, 0F, 1F, "Red color value to be mixed into the the gui hightlight overall color");
 		CustomUISettings.guihighlightColorG = config.getFloat(greenAmount, ghCat, 0F, 0F, 1F, "Green color value to be mixed into the the gui hightlight overall color");
 		CustomUISettings.guihighlightColorB = config.getFloat(blueAmount, ghCat, 0F, 0F, 1F, "Blue color value to be mixed into the the gui hightlight overall color");
-		CustomUISettings.guihighlightColorB = config.getFloat(alphaAmount, ghCat, 1F, 0F, 1F, "Alpha amount to be mixed into the the gui hightlight overall color");
+		CustomUISettings.guihighlightColorA = config.getFloat(alphaAmount, ghCat, 1F, 0F, 1F, "Alpha amount to be mixed into the the gui hightlight overall color");
 
 		CustomUISettings.buttonAnimation = config.getBoolean(buttonAnimation, baCat, true, "Set to true to enable button animations");
 		CustomUISettings.buttonAnimationType = ButtonAnimationType.getTypeFromName(config.getString(buttonAnimationType, baCat, "None", "How fast the animation should occur. (lower is faster)"));
@@ -110,19 +110,19 @@ public class CustomUIConfigLoader
 
 		prop = config.get(bhCat, "Fill " + redAmount, 0F);
 		prop.set(fill.getFloatRed());
-		CustomUISettings.highlightColorR = fill.getFloatRed();
+		CustomUISettings.fillColorR = fill.getFloatRed();
 
 		prop = config.get(bhCat, "Fill " + greenAmount, 0F);
 		prop.set(fill.getFloatGreen());
-		CustomUISettings.highlightColorG = fill.getFloatGreen();
+		CustomUISettings.fillColorG = fill.getFloatGreen();
 
 		prop = config.get(bhCat, "Fill " + blueAmount, 0F);
 		prop.set(fill.getFloatBlue());
-		CustomUISettings.highlightColorB = fill.getFloatBlue();
+		CustomUISettings.fillColorB = fill.getFloatBlue();
 
 		prop = config.get(bhCat, "Fill " + alphaAmount, 1F);
 		prop.set(fill.getFloatAlpha());
-		CustomUISettings.highlightColorA = fill.getFloatAlpha();
+		CustomUISettings.fillColorA = fill.getFloatAlpha();
 
 		prop = config.get(bhCat, thicknessAmount, 2F);
 		prop.set(thickness);
@@ -157,8 +157,8 @@ public class CustomUIConfigLoader
 		CustomUISettings.guihighlightColorB = color.getFloatBlue();
 
 		prop = config.get(ghCat, alphaAmount, 0F);
-		prop.set(color.getFloatBlue());
-		CustomUISettings.guihighlightColorB = color.getFloatBlue();
+		prop.set(color.getFloatAlpha());
+		CustomUISettings.guihighlightColorA = color.getFloatAlpha();
 
 		config.save();
 	}
