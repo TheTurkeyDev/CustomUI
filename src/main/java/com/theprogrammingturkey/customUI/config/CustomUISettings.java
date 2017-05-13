@@ -9,6 +9,10 @@ public class CustomUISettings
 	public static float highlightColorG = 0.0F;
 	public static float highlightColorB = 0.0F;
 	public static float highlightColorA = 0.0F;
+	public static float fillColorR = 0.0F;
+	public static float fillColorG = 0.0F;
+	public static float fillColorB = 0.0F;
+	public static float fillColorA = 0.0F;
 	public static float highlightLineThickness = 2.0F;
 	public static boolean highlightAffectedByLight = true;
 	public static boolean highlightBlockFaces = true;
@@ -17,6 +21,7 @@ public class CustomUISettings
 	public static float guihighlightColorR = 0.0F;
 	public static float guihighlightColorG = 0.0F;
 	public static float guihighlightColorB = 0.0F;
+	public static float guihighlightColorA = 0.0F;
 
 	public static boolean buttonAnimation = true;
 	public static ButtonAnimationType buttonAnimationType = ButtonAnimationType.SlideUp;

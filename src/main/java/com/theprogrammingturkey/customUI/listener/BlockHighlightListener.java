@@ -43,10 +43,14 @@ public class BlockHighlightListener
 				double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
 				double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
 				double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
-				float redAmount = CustomUISettings.highlightColorR;
-				float greenAmount = CustomUISettings.highlightColorG;
-				float blueAmount = CustomUISettings.highlightColorB;
-				float alphaAmount = CustomUISettings.highlightColorA;
+				float redAmountHighlight = CustomUISettings.highlightColorR;
+				float greenAmountHighlight = CustomUISettings.highlightColorG;
+				float blueAmountHighlight = CustomUISettings.highlightColorB;
+				float alphaAmountHighlight = CustomUISettings.highlightColorA;
+				float redAmountFill = CustomUISettings.fillColorR;
+				float greenAmountFill = CustomUISettings.fillColorG;
+				float blueAmountFill = CustomUISettings.fillColorB;
+				float alphaAmountFill = CustomUISettings.fillColorA;
 
 				if(CustomUISettings.highlightAffectedByLight)
 				{
@@ -84,19 +88,24 @@ public class BlockHighlightListener
 					// System.out.println(light);
 					if(light > 0)
 					{
-						redAmount *= light;
-						greenAmount *= light;
-						blueAmount *= light;
-						alphaAmount *= light;
+						redAmountHighlight *= light;
+						greenAmountHighlight *= light;
+						blueAmountHighlight *= light;
+						alphaAmountHighlight *= light;
+						redAmountFill *= light;
+						greenAmountFill *= light;
+						blueAmountFill *= light;
+						alphaAmountFill *= light;
 					}
 					// System.out.println(redAmount + " " +
 					// greenAmount + " " + blueAmount + " "
 					// + alphaAmount);
 				}
-				if(CustomUISettings.highlightBlockFaces)
-					RenderGlobal.renderFilledBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
 
-				RenderGlobal.drawSelectionBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmount, greenAmount, blueAmount, alphaAmount);
+				if(CustomUISettings.highlightBlockFaces)
+					RenderGlobal.renderFilledBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmountFill, greenAmountFill, blueAmountFill, alphaAmountFill);
+
+				RenderGlobal.drawSelectionBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmountHighlight, greenAmountHighlight, blueAmountHighlight, alphaAmountHighlight);
 			}
 
 			GlStateManager.depthMask(true);
