@@ -2,6 +2,7 @@ package com.theprogrammingturkey.customUI.config;
 
 import java.io.File;
 
+import com.theprogrammingturkey.customUI.client.gui.GuiColorSelection;
 import com.theprogrammingturkey.customUI.client.gui.ConfigGui.ButtonAnimationType;
 
 import net.minecraftforge.common.config.Configuration;
@@ -10,7 +11,6 @@ import net.minecraftforge.common.config.Property;
 public class CustomUIConfigLoader
 {
 	public static Configuration config;
-	public static final String genCat = "General Settings";
 
 	public static final String bhCat = "Block Highlight Settings";
 	public static final String ghCat = "Gui Highlight Settings";
@@ -24,10 +24,10 @@ public class CustomUIConfigLoader
 
 	public static final String guiHighlight = "Gui Slot Highlighting";
 
-	public static final String redAmount = "Highlight red amount";
-	public static final String greenAmount = "Highlight green amount";
-	public static final String blueAmount = "Highlight blue amount";
-	public static final String alphaAmount = "Block Face Highlight alpha amount";
+	public static final String redAmount = "Red amount";
+	public static final String greenAmount = "Green amount";
+	public static final String blueAmount = "Blue amount";
+	public static final String alphaAmount = "Alpha amount";
 
 	public static final String buttonAnimation = "Button Animations";
 	public static final String buttonAnimationType = "Button Animation Type";
@@ -42,7 +42,6 @@ public class CustomUIConfigLoader
 		config = new Configuration(file);
 
 		config.load();
-		config.setCategoryComment(genCat, "General overall settings");
 		config.setCategoryComment(bhCat, "Settings related to block highlighting");
 		config.setCategoryComment(ghCat, "Settings related to gui slot highlighting when moused over");
 		config.setCategoryComment(baCat, "Settings related to button animations");
@@ -57,10 +56,14 @@ public class CustomUIConfigLoader
 		config.load();
 
 		CustomUISettings.includeDefaultHighlight = config.getBoolean(defaultHighlight, bhCat, false, "Set to true to include the default thin black outline with the custom outline highlight");
-		CustomUISettings.highlightColorR = config.getFloat(redAmount, bhCat, 0F, 0F, 1F, "Red color value to be mixed into the the block hightlight overall color");
-		CustomUISettings.highlightColorG = config.getFloat(greenAmount, bhCat, 0F, 0F, 1F, "Green color value to be mixed into the the block hightlight overall color");
-		CustomUISettings.highlightColorB = config.getFloat(blueAmount, bhCat, 0F, 0F, 1F, "Blue color value to be mixed into the the block hightlight overall color");
-		CustomUISettings.highlightColorA = config.getFloat(alphaAmount, bhCat, 0.3F, 0F, 1F, "Alpha amount for block face hightlight overall");
+		CustomUISettings.highlightColorR = config.getFloat("Outline " + redAmount, bhCat, 0F, 0F, 1F, "Red color value to be mixed into the the block hightlight overall color");
+		CustomUISettings.highlightColorG = config.getFloat("Outline " + greenAmount, bhCat, 0F, 0F, 1F, "Green color value to be mixed into the the block hightlight overall color");
+		CustomUISettings.highlightColorB = config.getFloat("Outline " + blueAmount, bhCat, 0F, 0F, 1F, "Blue color value to be mixed into the the block hightlight overall color");
+		CustomUISettings.highlightColorA = config.getFloat("Outline " + alphaAmount, bhCat, 1F, 0F, 1F, "Alpha amount for block face hightlight overall");
+		CustomUISettings.fillColorR = config.getFloat("Fill " + redAmount, bhCat, 0F, 0F, 1F, "Red color value to be mixed into the the block hightlight overall color");
+		CustomUISettings.fillColorG = config.getFloat("Fill " + greenAmount, bhCat, 0F, 0F, 1F, "Green color value to be mixed into the the block hightlight overall color");
+		CustomUISettings.fillColorB = config.getFloat("Fill " + blueAmount, bhCat, 0F, 0F, 1F, "Blue color value to be mixed into the the block hightlight overall color");
+		CustomUISettings.fillColorA = config.getFloat("Fill " + alphaAmount, bhCat, 1F, 0F, 1F, "Alpha amount for block face hightlight overall");
 		CustomUISettings.highlightLineThickness = config.getFloat(thicknessAmount, bhCat, 2F, 1F, 10F, "How thick the highlight line should be.");
 		CustomUISettings.highlightAffectedByLight = config.getBoolean(dimHighlight, bhCat, false, "Set to true for the block highlight to dim to match the blocks light level");
 		CustomUISettings.highlightBlockFaces = config.getBoolean(faceHighlight, bhCat, false, "Set to true for block faces to be highlighted aswell");
@@ -69,6 +72,7 @@ public class CustomUIConfigLoader
 		CustomUISettings.guihighlightColorR = config.getFloat(redAmount, ghCat, 0F, 0F, 1F, "Red color value to be mixed into the the gui hightlight overall color");
 		CustomUISettings.guihighlightColorG = config.getFloat(greenAmount, ghCat, 0F, 0F, 1F, "Green color value to be mixed into the the gui hightlight overall color");
 		CustomUISettings.guihighlightColorB = config.getFloat(blueAmount, ghCat, 0F, 0F, 1F, "Blue color value to be mixed into the the gui hightlight overall color");
+		CustomUISettings.guihighlightColorB = config.getFloat(alphaAmount, ghCat, 1F, 0F, 1F, "Alpha amount to be mixed into the the gui hightlight overall color");
 
 		CustomUISettings.buttonAnimation = config.getBoolean(buttonAnimation, baCat, true, "Set to true to enable button animations");
 		CustomUISettings.buttonAnimationType = ButtonAnimationType.getTypeFromName(config.getString(buttonAnimationType, baCat, "None", "How fast the animation should occur. (lower is faster)"));
@@ -81,28 +85,44 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveBlockHighlightSettings(float a, float r, float g, float b, float thickness)
+	public static void saveBlockHighlightSettings(GuiColorSelection outline, GuiColorSelection fill, float thickness)
 	{
 		config.load();
 
 		Property prop = config.get(bhCat, defaultHighlight, false);
 		prop.set(CustomUISettings.includeDefaultHighlight);
 
-		prop = config.get(bhCat, redAmount, 0F);
-		prop.set(r);
-		CustomUISettings.highlightColorR = r;
+		prop = config.get(bhCat, "Outline " + redAmount, 0F);
+		prop.set(outline.getFloatRed());
+		CustomUISettings.highlightColorR = outline.getFloatRed();
 
-		prop = config.get(bhCat, greenAmount, 0F);
-		prop.set(g);
-		CustomUISettings.highlightColorG = g;
+		prop = config.get(bhCat, "Outline " + greenAmount, 0F);
+		prop.set(outline.getFloatGreen());
+		CustomUISettings.highlightColorG = outline.getFloatGreen();
 
-		prop = config.get(bhCat, blueAmount, 0F);
-		prop.set(b);
-		CustomUISettings.highlightColorB = b;
+		prop = config.get(bhCat, "Outline " + blueAmount, 0F);
+		prop.set(outline.getFloatBlue());
+		CustomUISettings.highlightColorB = outline.getFloatBlue();
 
-		prop = config.get(bhCat, alphaAmount, 0.3F);
-		prop.set(a);
-		CustomUISettings.highlightColorA = a;
+		prop = config.get(bhCat, "Outline " + alphaAmount, 1F);
+		prop.set(outline.getFloatAlpha());
+		CustomUISettings.highlightColorA = outline.getFloatAlpha();
+
+		prop = config.get(bhCat, "Fill " + redAmount, 0F);
+		prop.set(fill.getFloatRed());
+		CustomUISettings.highlightColorR = fill.getFloatRed();
+
+		prop = config.get(bhCat, "Fill " + greenAmount, 0F);
+		prop.set(fill.getFloatGreen());
+		CustomUISettings.highlightColorG = fill.getFloatGreen();
+
+		prop = config.get(bhCat, "Fill " + blueAmount, 0F);
+		prop.set(fill.getFloatBlue());
+		CustomUISettings.highlightColorB = fill.getFloatBlue();
+
+		prop = config.get(bhCat, "Fill " + alphaAmount, 1F);
+		prop.set(fill.getFloatAlpha());
+		CustomUISettings.highlightColorA = fill.getFloatAlpha();
 
 		prop = config.get(bhCat, thicknessAmount, 2F);
 		prop.set(thickness);
@@ -117,7 +137,7 @@ public class CustomUIConfigLoader
 		config.save();
 	}
 
-	public static void saveGuiHighlightSettings(float r, float g, float b)
+	public static void saveGuiHighlightSettings(GuiColorSelection color)
 	{
 		config.load();
 
@@ -125,16 +145,20 @@ public class CustomUIConfigLoader
 		prop.set(CustomUISettings.guiHighlight);
 
 		prop = config.get(ghCat, redAmount, 0F);
-		prop.set(r);
-		CustomUISettings.guihighlightColorR = r;
+		prop.set(color.getFloatRed());
+		CustomUISettings.guihighlightColorR = color.getFloatRed();
 
 		prop = config.get(ghCat, greenAmount, 0F);
-		prop.set(g);
-		CustomUISettings.guihighlightColorG = g;
+		prop.set(color.getFloatGreen());
+		CustomUISettings.guihighlightColorG = color.getFloatGreen();
 
 		prop = config.get(ghCat, blueAmount, 0F);
-		prop.set(b);
-		CustomUISettings.guihighlightColorB = b;
+		prop.set(color.getFloatBlue());
+		CustomUISettings.guihighlightColorB = color.getFloatBlue();
+
+		prop = config.get(ghCat, alphaAmount, 0F);
+		prop.set(color.getFloatBlue());
+		CustomUISettings.guihighlightColorB = color.getFloatBlue();
 
 		config.save();
 	}
