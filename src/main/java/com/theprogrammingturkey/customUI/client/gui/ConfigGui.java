@@ -68,8 +68,8 @@ public class ConfigGui extends GuiScreen
 		boxFillColorSelelection.setCurrentValues(CustomUISettings.fillColorR, CustomUISettings.fillColorG, CustomUISettings.fillColorB, CustomUISettings.fillColorA);
 
 		this.buttonList.add(thicknessSlider = new GuiSlider(14, "Thickness", this.width / 2 - 100, 270, 1F, 10F, CustomUISettings.highlightLineThickness, 0.5F));
-		this.buttonList.add(useDefaultBox = new GuiToggleButton(15, this.width / 2 - 100, 295, 150, 20, "Default selection box: ", CustomUISettings.includeDefaultHighlight));
-		this.buttonList.add(highlightAffectedByLight = new GuiToggleButton(16, this.width / 2 - 100, 320, 150, 20, "Highlight Dim: ", CustomUISettings.highlightAffectedByLight));
+		this.buttonList.add(useDefaultBox = new GuiToggleButton(15, this.width / 2 - 100, 295, 150, 20, "Vanilla selection box: ", CustomUISettings.includeDefaultHighlight));
+		this.buttonList.add(highlightAffectedByLight = new GuiToggleButton(16, this.width / 2 - 100, 320, 150, 20, "Dim with light levels: ", CustomUISettings.highlightAffectedByLight));
 		this.buttonList.add(highlightBlockFaces = new GuiToggleButton(17, this.width / 2 - 100, 345, 150, 20, "Highlight Block Faces: ", CustomUISettings.highlightBlockFaces));
 
 		guiHighlightColorSelelection = new GuiColorSelection("Gui Highligt", this.buttonList, 40, this.width / 2 - 100, 30);
