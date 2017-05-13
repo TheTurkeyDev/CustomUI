@@ -55,7 +55,7 @@ public class CustomUIConfigLoader
 	{
 		config.load();
 
-		CustomUISettings.includeDefaultHighlight = config.getBoolean(defaultHighlight, bhCat, false, "Set to true to include the default thin black outline with the custom outline highlight");
+		CustomUISettings.includeDefaultHighlight = config.getBoolean(defaultHighlight, bhCat, true, "Set to true to include the default thin black outline with the custom outline highlight");
 		CustomUISettings.highlightColorR = config.getFloat("Outline " + redAmount, bhCat, 0F, 0F, 1F, "Red color value to be mixed into the the block hightlight overall color");
 		CustomUISettings.highlightColorG = config.getFloat("Outline " + greenAmount, bhCat, 0F, 0F, 1F, "Green color value to be mixed into the the block hightlight overall color");
 		CustomUISettings.highlightColorB = config.getFloat("Outline " + blueAmount, bhCat, 0F, 0F, 1F, "Blue color value to be mixed into the the block hightlight overall color");
@@ -72,7 +72,7 @@ public class CustomUIConfigLoader
 		CustomUISettings.guihighlightColorR = config.getFloat(redAmount, ghCat, 0F, 0F, 1F, "Red color value to be mixed into the the gui hightlight overall color");
 		CustomUISettings.guihighlightColorG = config.getFloat(greenAmount, ghCat, 0F, 0F, 1F, "Green color value to be mixed into the the gui hightlight overall color");
 		CustomUISettings.guihighlightColorB = config.getFloat(blueAmount, ghCat, 0F, 0F, 1F, "Blue color value to be mixed into the the gui hightlight overall color");
-		CustomUISettings.guihighlightColorB = config.getFloat(alphaAmount, ghCat, 1F, 0F, 1F, "Alpha amount to be mixed into the the gui hightlight overall color");
+		CustomUISettings.guihighlightColorA = config.getFloat(alphaAmount, ghCat, 1F, 0F, 1F, "Alpha amount to be mixed into the the gui hightlight overall color");
 
 		CustomUISettings.buttonAnimation = config.getBoolean(buttonAnimation, baCat, true, "Set to true to enable button animations");
 		CustomUISettings.buttonAnimationType = ButtonAnimationType.getTypeFromName(config.getString(buttonAnimationType, baCat, "None", "How fast the animation should occur. (lower is faster)"));
@@ -89,7 +89,7 @@ public class CustomUIConfigLoader
 	{
 		config.load();
 
-		Property prop = config.get(bhCat, defaultHighlight, false);
+		Property prop = config.get(bhCat, defaultHighlight, true);
 		prop.set(CustomUISettings.includeDefaultHighlight);
 
 		prop = config.get(bhCat, "Outline " + redAmount, 0F);
