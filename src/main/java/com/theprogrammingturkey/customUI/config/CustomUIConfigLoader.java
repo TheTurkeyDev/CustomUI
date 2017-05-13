@@ -55,7 +55,7 @@ public class CustomUIConfigLoader
 	{
 		config.load();
 
-		CustomUISettings.includeDefaultHighlight = config.getBoolean(defaultHighlight, bhCat, false, "Set to true to include the default thin black outline with the custom outline highlight");
+		CustomUISettings.includeDefaultHighlight = config.getBoolean(defaultHighlight, bhCat, true, "Set to true to include the default thin black outline with the custom outline highlight");
 		CustomUISettings.highlightColorR = config.getFloat("Outline " + redAmount, bhCat, 0F, 0F, 1F, "Red color value to be mixed into the the block hightlight overall color");
 		CustomUISettings.highlightColorG = config.getFloat("Outline " + greenAmount, bhCat, 0F, 0F, 1F, "Green color value to be mixed into the the block hightlight overall color");
 		CustomUISettings.highlightColorB = config.getFloat("Outline " + blueAmount, bhCat, 0F, 0F, 1F, "Blue color value to be mixed into the the block hightlight overall color");
@@ -89,7 +89,7 @@ public class CustomUIConfigLoader
 	{
 		config.load();
 
-		Property prop = config.get(bhCat, defaultHighlight, false);
+		Property prop = config.get(bhCat, defaultHighlight, true);
 		prop.set(CustomUISettings.includeDefaultHighlight);
 
 		prop = config.get(bhCat, "Outline " + redAmount, 0F);
