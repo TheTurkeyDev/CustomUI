@@ -1,86 +1,38 @@
 package com.theprogrammingturkey.customUI.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.theprogrammingturkey.customUI.CustomUICore;
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
+import com.theprogrammingturkey.gobblecore.commands.BaseCommandHandler;
+import com.theprogrammingturkey.gobblecore.commands.CommandManager;
+import com.theprogrammingturkey.gobblecore.commands.SimpleSubCommand;
+import com.theprogrammingturkey.gobblecore.config.ConfigErrorReporter;
 
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
-public class CustomUICommands implements ICommand
+public class CustomUICommands
 {
-	private List<String> aliases;
-	List<String> tab;
 
-	public CustomUICommands()
+	public static void loadCommands()
 	{
-		this.aliases = new ArrayList<String>();
-		this.aliases.add("customUI");
-		this.aliases.add("cui");
-		this.aliases.add("CUI");
-		this.aliases.add("Customui");
-		this.aliases.add("customui");
+		BaseCommandHandler commandHandler = new BaseCommandHandler(CustomUICore.instance, "CustomUI");
+		commandHandler.addCommandAliases("customUI", "cui", "CUI", "Customui", "customui");
 
-		tab = new ArrayList<String>();
-		tab.add("reload");
-		tab.add("version");
-		tab.add("handNBT");
-	}
-
-	@Override
-	public String getCommandName()
-	{
-		return "CustomUI";
-	}
-
-	@Override
-	public String getCommandUsage(ICommandSender icommandsender)
-	{
-		return "/CustomUI <reload>";
-	}
-
-	@Override
-	public List<String> getCommandAliases()
-	{
-		return this.aliases;
-	}
-
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args)
-	{
-		if(args.length > 0 && args[0].equalsIgnoreCase("reload"))
+		commandHandler.registerSubCommand("reload", new SimpleSubCommand("Refreshes the mod with any changes made in the mod's config", false)
 		{
-			CustomUIConfigLoader.refreshSettings();
-		}
-	}
-	
-	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
-	{
-		if(args.length == 0)
-			return tab;
-		return null;
-	}
+			@Override
+			public boolean execute(MinecraftServer server, ICommandSender sender, String[] args)
+			{
+				CustomUIConfigLoader.refreshSettings();
+				ConfigErrorReporter.outputErrors((EntityPlayer) sender);
+				sender.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Reloaded"));
+				return true;
+			}
+		});
 
-	@Override
-	public boolean isUsernameIndex(String[] astring, int i)
-	{
-		return false;
+		CommandManager.registerCommandHandlers(commandHandler);
 	}
-	@Override
-	public int compareTo(ICommand arg0)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-	{
-		return true;
-	}
-
-
 }

@@ -5,8 +5,11 @@ import java.util.List;
 
 import com.theprogrammingturkey.customUI.client.gui.ConfigGui.ButtonAnimationType;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
-import com.theprogrammingturkey.customUI.util.CustomEntry;
-import com.theprogrammingturkey.customUI.util.RenderUtil;
+import com.theprogrammingturkey.customUI.util.CustomUIRenderer;
+import com.theprogrammingturkey.gobblecore.client.gui.GuiToggleButton;
+import com.theprogrammingturkey.gobblecore.util.CustomEntry;
+import com.theprogrammingturkey.gobblecore.util.MathUtil;
+import com.theprogrammingturkey.gobblecore.util.RenderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -68,14 +71,14 @@ public class GuiListener
 
 			for(GuiButton b : buttons)
 			{
-				if(b.getClass() != GuiButton.class)
+				if(!b.getClass().equals(GuiButton.class) && !b.getClass().equals(GuiToggleButton.class))
 					continue;
 				if(b.isMouseOver() && b.visible)
 					if(animationProgress == null || !animationProgress.getKey().equals(b))
 						animationProgress = new CustomEntry<GuiButton, Float>(b, CustomUISettings.buttonAnimationSpeed);
 			}
 
-			if(animationProgress != null && animationProgress.getValue() >= 0)
+			if(animationProgress != null && animationProgress.getValue() >= 0 && buttons.contains(animationProgress.getKey()))
 			{
 				animationProgress.setValue(animationProgress.getValue() - (20.0f / Minecraft.getDebugFPS()));
 
@@ -89,23 +92,100 @@ public class GuiListener
 				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
+				float alpha = 1;
+				float x1 = b.xPosition;
+				float x2 = b.xPosition + (b.width / 2);
+				float y1 = b.yPosition;
+				int uCord2 = b.width / 2;
+				int uCord4 = b.width / 2;
+				int uCord3 = 200 - uCord2;
+				int uCord1 = 0;
+				int vCord0 = 86;
+				int vCord1 = 66;
+				int vCord2 = b.height;
+
 				if(CustomUISettings.buttonAnimationType == ButtonAnimationType.FadeIn)
 				{
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1 - (animationProgress.getValue() / CustomUISettings.buttonAnimationSpeed));
-					b.drawTexturedModalRect(b.xPosition, b.yPosition, 0, 86, b.width, b.height);
-					b.drawTexturedModalRect(b.xPosition + b.width / 2, b.yPosition, 200 - b.width / 2, 86, b.width / 2, b.height);
-					GlStateManager.color(1.0F, 1.0F, 1.0F, animationProgress.getValue() / CustomUISettings.buttonAnimationSpeed);
-					b.drawTexturedModalRect(b.xPosition, b.yPosition, 0, 66, b.width, b.height);
-					b.drawTexturedModalRect(b.xPosition + b.width / 2, b.yPosition, 200 - b.width / 2, 66, b.width / 2, b.height);
+					alpha = animationProgress.getValue() / CustomUISettings.buttonAnimationSpeed;
 				}
 				else if(CustomUISettings.buttonAnimationType == ButtonAnimationType.SlideUp)
 				{
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-					b.drawTexturedModalRect(b.xPosition, b.yPosition, 0, 86, b.width, b.height);
-					b.drawTexturedModalRect(b.xPosition + b.width / 2, b.yPosition, 200 - b.width / 2, 86, b.width / 2, b.height);
-					b.drawTexturedModalRect(b.xPosition, b.yPosition, 0, 66, b.width, (int) ((b.height / CustomUISettings.buttonAnimationSpeed) * animationProgress.getValue()));
-					b.drawTexturedModalRect(b.xPosition + b.width / 2, b.yPosition, 200 - b.width / 2, 66, b.width / 2, (int) ((b.height / CustomUISettings.buttonAnimationSpeed) * animationProgress.getValue()));
+					vCord2 = (int) ((b.height / CustomUISettings.buttonAnimationSpeed) * animationProgress.getValue());
 				}
+				else if(CustomUISettings.buttonAnimationType == ButtonAnimationType.SlideLeft)
+				{
+					if(animationProgress.getValue() > CustomUISettings.buttonAnimationSpeed / 2)
+					{
+						uCord4 = (int) (b.width * ((animationProgress.getValue() - (CustomUISettings.buttonAnimationSpeed / 2)) / CustomUISettings.buttonAnimationSpeed));
+					}
+					else
+					{
+						uCord4 = 0;
+						uCord2 = (int) (b.width * (animationProgress.getValue() / CustomUISettings.buttonAnimationSpeed));
+					}
+				}
+				else if(CustomUISettings.buttonAnimationType == ButtonAnimationType.SlideRight)
+				{
+					vCord0 = 66;
+					vCord1 = 86;
+					if(animationProgress.getValue() > CustomUISettings.buttonAnimationSpeed / 2)
+					{
+						uCord4 = 0;
+						uCord2 = (int) (b.width * ((CustomUISettings.buttonAnimationSpeed - animationProgress.getValue()) / CustomUISettings.buttonAnimationSpeed));
+					}
+					else
+					{
+						uCord4 = (int) (b.width * (((CustomUISettings.buttonAnimationSpeed / 2) - animationProgress.getValue()) / CustomUISettings.buttonAnimationSpeed));
+					}
+				}
+				else if(CustomUISettings.buttonAnimationType == ButtonAnimationType.SlideIn)
+				{
+					boolean right = b.xPosition < e.getGui().width / 2;
+					if(right)
+					{
+						vCord0 = 66;
+						vCord1 = 86;
+					}
+					if(animationProgress.getValue() > CustomUISettings.buttonAnimationSpeed / 2)
+					{
+						if(right)
+						{
+							uCord4 = 0;
+							uCord2 = (int) (b.width * ((CustomUISettings.buttonAnimationSpeed - animationProgress.getValue()) / CustomUISettings.buttonAnimationSpeed));
+						}
+						else
+						{
+							uCord4 = (int) (b.width * ((animationProgress.getValue() - (CustomUISettings.buttonAnimationSpeed / 2)) / CustomUISettings.buttonAnimationSpeed));
+						}
+					}
+					else
+					{
+						if(right)
+						{
+							uCord4 = (int) (b.width * (((CustomUISettings.buttonAnimationSpeed / 2) - animationProgress.getValue()) / CustomUISettings.buttonAnimationSpeed));
+						}
+						else
+						{
+							uCord4 = 0;
+							uCord2 = (int) (b.width * (animationProgress.getValue() / CustomUISettings.buttonAnimationSpeed));
+						}
+
+					}
+				}
+				else if(CustomUISettings.buttonAnimationType == ButtonAnimationType.None)
+				{
+					uCord2 = 0;
+					uCord4 = 0;
+				}
+
+				uCord2 = MathUtil.clamp(0, (b.width / 2), uCord2);
+				uCord4 = MathUtil.clamp(0, (b.width / 2), uCord4);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+				b.drawTexturedModalRect(x1, y1, 0, vCord0, b.width / 2, vCord2);
+				b.drawTexturedModalRect(x2, y1, uCord3, vCord0, b.width / 2, vCord2);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+				b.drawTexturedModalRect(x1, y1, uCord1, vCord1, uCord2, vCord2);
+				b.drawTexturedModalRect(x2, y1, uCord3, vCord1, uCord4, vCord2);
 
 				int j = 14737632;
 
@@ -143,7 +223,7 @@ public class GuiListener
 				stacks.addAll(player.inventory.armorInventory);
 				stacks.addAll(player.inventory.offHandInventory);
 				stacks.add(player.inventory.mainInventory.get(player.inventory.currentItem));
-				RenderUtil.renderDurabilityHUD(mc, stacks);
+				CustomUIRenderer.renderDurabilityHUD(mc, stacks);
 			}
 		}
 	}
