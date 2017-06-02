@@ -6,7 +6,7 @@ import com.theprogrammingturkey.customUI.command.CustomUICommands;
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.proxy.CommonProxy;
 import com.theprogrammingturkey.gobblecore.IModCore;
-import com.theprogrammingturkey.gobblecore.managers.ProxyManager;
+import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;

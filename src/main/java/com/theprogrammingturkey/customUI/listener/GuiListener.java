@@ -36,10 +36,7 @@ public class GuiListener
 	@SubscribeEvent
 	public void onBackgroundDraw(BackgroundDrawnEvent e)
 	{
-		if(!CustomUISettings.guiHighlight)
-			return;
-
-		if(e.getGui() instanceof GuiContainer)
+		if(CustomUISettings.guiHighlight && e.getGui() instanceof GuiContainer)
 		{
 			GuiContainer gui = (GuiContainer) e.getGui();
 			Slot s = gui.getSlotUnderMouse();
@@ -57,6 +54,11 @@ public class GuiListener
 			GlStateManager.colorMask(true, true, true, true);
 			GlStateManager.translate(-left, -top, -50.0F);
 		}
+	}
+
+	@SubscribeEvent
+	public void onGuiDraw(DrawScreenEvent.Pre e)
+	{
 	}
 
 	@SubscribeEvent
