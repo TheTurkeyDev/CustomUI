@@ -1,9 +1,10 @@
 package com.theprogrammingturkey.customUI.proxy;
 
+import com.theprogrammingturkey.gobblecore.proxy.IBaseProxy;
+
 import net.minecraft.entity.player.EntityPlayer;
 
-
-public class CommonProxy
+public class CommonProxy implements IBaseProxy
 {
 
 	public boolean isClient()
@@ -20,12 +21,12 @@ public class CommonProxy
 	{
 
 	}
-	
+
 	public void registerEvents()
 	{
-		
+
 	}
-	
+
 	public EntityPlayer getClientPlayer()
 	{
 		return null;

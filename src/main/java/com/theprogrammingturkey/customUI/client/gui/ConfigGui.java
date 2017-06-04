@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
-import com.theprogrammingturkey.customUI.util.MathUtil;
-import com.theprogrammingturkey.customUI.util.RenderUtil;
+import com.theprogrammingturkey.customUI.util.CustomUIRenderer;
+import com.theprogrammingturkey.gobblecore.client.gui.GuiSlider;
+import com.theprogrammingturkey.gobblecore.client.gui.GuiToggleButton;
+import com.theprogrammingturkey.gobblecore.util.MathUtil;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -105,7 +107,7 @@ public class ConfigGui extends GuiScreen
 
 		if(movingHUD)
 		{
-			RenderUtil.renderDurabilityHUD(mc, new ArrayList<ItemStack>(Arrays.asList(this.testItems)));
+			CustomUIRenderer.renderDurabilityHUD(mc, new ArrayList<ItemStack>(Arrays.asList(this.testItems)));
 		}
 	}
 
@@ -275,7 +277,7 @@ public class ConfigGui extends GuiScreen
 
 	public enum ButtonAnimationType
 	{
-		None("None"), SlideUp("Slide Up"), FadeIn("Fade In");
+		None("None"), SlideUp("Slide Up"), SlideRight("Slide Right"), SlideLeft("Slide Left"), SlideIn("Slide In"), FadeIn("Fade In");
 
 		private String typeName;
 
@@ -296,6 +298,12 @@ public class ConfigGui extends GuiScreen
 				case None:
 					return SlideUp;
 				case SlideUp:
+					return SlideLeft;
+				case SlideLeft:
+					return SlideRight;
+				case SlideRight:
+					return SlideIn;
+				case SlideIn:
 					return FadeIn;
 				case FadeIn:
 					return None;

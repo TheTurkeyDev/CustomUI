@@ -2,8 +2,11 @@ package com.theprogrammingturkey.customUI;
 
 import org.apache.logging.log4j.Logger;
 
+import com.theprogrammingturkey.customUI.command.CustomUICommands;
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.proxy.CommonProxy;
+import com.theprogrammingturkey.gobblecore.IModCore;
+import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -14,12 +17,13 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, guiFactory = "com.theprogrammingturkey.customUI.config.ConfigGuiFactory")
-public class CustomUICore
+@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "after:gobblecore[0.1.4.1,)", guiFactory = CustomUICore.GUIFACTORY)
+public class CustomUICore implements IModCore
 {
 	public static final String MODID = "customui";
 	public static final String VERSION = "@VERSION@";
 	public static final String NAME = "CustomUI";
+	public static final String GUIFACTORY = "com.theprogrammingturkey.customUI.config.ConfigGuiFactory";
 
 	@Instance(value = MODID)
 	public static CustomUICore instance;
@@ -37,22 +41,41 @@ public class CustomUICore
 	public void load(FMLPreInitializationEvent event)
 	{
 		logger = event.getModLog();
-		
+
 		CustomUIConfigLoader.loadConfigSettings(event.getSuggestedConfigurationFile());
-		
-		proxy.registerRenderings();
-		proxy.registerEvents();
+
+		ProxyManager.registerModProxy(proxy);
+
+		CustomUICommands.loadCommands();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+
 	}
 
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event)
 	{
-		
+
+	}
+
+	@Override
+	public String getModID()
+	{
+		return MODID;
+	}
+
+	@Override
+	public String getName()
+	{
+		return NAME;
+	}
+
+	@Override
+	public String getVersion()
+	{
+		return VERSION;
 	}
 }

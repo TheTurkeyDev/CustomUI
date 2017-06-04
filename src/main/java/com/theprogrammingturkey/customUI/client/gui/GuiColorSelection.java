@@ -2,7 +2,8 @@ package com.theprogrammingturkey.customUI.client.gui;
 
 import java.util.List;
 
-import com.theprogrammingturkey.customUI.util.RenderUtil;
+import com.theprogrammingturkey.gobblecore.client.gui.GuiSlider;
+import com.theprogrammingturkey.gobblecore.util.RenderUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
