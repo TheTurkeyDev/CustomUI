@@ -51,7 +51,7 @@ repositories {
 }
 
 dependencies {
-	compile "com.theprogrammingturkey.gobblecore:GobbleCore:1.10.2-0.1.4.1"
+	compile "com.theprogrammingturkey.gobblecore:GobbleCore:${gobble_core_version}"
 }
 
 processResources
