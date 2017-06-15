@@ -46,8 +46,8 @@ public class GuiListener
 			int top = ObfuscationReflectionHelper.getPrivateValue(GuiContainer.class, gui, "guiTop", "field_147009_r");
 
 			GlStateManager.translate(left, top, 50.0F);
-			int j1 = s.xDisplayPosition;
-			int k1 = s.yDisplayPosition;
+			int j1 = s.xPos;
+			int k1 = s.yPos;
 			GlStateManager.colorMask(true, true, true, true);
 			int argb = ((int) 255 << 24) | ((int) (CustomUISettings.guihighlightColorR * 255) << 16) | ((int) (CustomUISettings.guihighlightColorG * 255) << 8) | (int) (CustomUISettings.guihighlightColorB * 255);
 			RenderUtil.drawGradientRect(j1, k1, j1 + 16, k1 + 16, argb, argb);

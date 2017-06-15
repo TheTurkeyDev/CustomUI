@@ -6,11 +6,11 @@ import com.theprogrammingturkey.gobblecore.commands.BaseCommandHandler;
 import com.theprogrammingturkey.gobblecore.commands.CommandManager;
 import com.theprogrammingturkey.gobblecore.commands.SimpleSubCommand;
 import com.theprogrammingturkey.gobblecore.config.ConfigErrorReporter;
+import com.theprogrammingturkey.gobblecore.util.MessageUtil;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 public class CustomUICommands
@@ -26,9 +26,12 @@ public class CustomUICommands
 			@Override
 			public boolean execute(MinecraftServer server, ICommandSender sender, String[] args)
 			{
+				if(!(sender instanceof EntityPlayer))
+					return false;
+
 				CustomUIConfigLoader.refreshSettings();
 				ConfigErrorReporter.outputErrors((EntityPlayer) sender);
-				sender.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Reloaded"));
+				MessageUtil.sendMessageToPlayer((EntityPlayer) sender, TextFormatting.GREEN + "Reloaded");
 				return true;
 			}
 		});
