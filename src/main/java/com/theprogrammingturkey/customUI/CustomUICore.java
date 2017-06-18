@@ -2,10 +2,13 @@ package com.theprogrammingturkey.customUI;
 
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.JsonElement;
 import com.theprogrammingturkey.customUI.command.CustomUICommands;
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.proxy.CommonProxy;
 import com.theprogrammingturkey.gobblecore.IModCore;
+import com.theprogrammingturkey.gobblecore.managers.WebHookManager;
+import com.theprogrammingturkey.gobblecore.managers.WebHookManager.ModWebHook;
 import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
 
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "after:gobblecore[0.1.3.16,)", guiFactory = "com.theprogrammingturkey.customUI.config.ConfigGuiFactory")
+@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "after:gobblecore", guiFactory = "com.theprogrammingturkey.customUI.config.ConfigGuiFactory")
 public class CustomUICore implements IModCore
 {
 	public static final String MODID = "customui";
@@ -46,6 +49,15 @@ public class CustomUICore implements IModCore
 		ProxyManager.registerModProxy(proxy);
 
 		CustomUICommands.loadCommands();
+
+		WebHookManager.registerHook(new ModWebHook(this)
+		{
+			@Override
+			public void onResponse(JsonElement json)
+			{
+
+			}
+		});
 	}
 
 	@EventHandler
