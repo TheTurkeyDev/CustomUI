@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "after:gobblecore", guiFactory = "com.theprogrammingturkey.customUI.config.ConfigGuiFactory")
+@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "required-after:gobblecore", guiFactory = "com.theprogrammingturkey.customUI.config.ConfigGuiFactory")
 public class CustomUICore implements IModCore
 {
 	public static final String MODID = "customui";
