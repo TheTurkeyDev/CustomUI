@@ -2,10 +2,13 @@ package com.theprogrammingturkey.customUI;
 
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.JsonElement;
 import com.theprogrammingturkey.customUI.command.CustomUICommands;
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.proxy.CommonProxy;
 import com.theprogrammingturkey.gobblecore.IModCore;
+import com.theprogrammingturkey.gobblecore.managers.WebHookManager;
+import com.theprogrammingturkey.gobblecore.managers.WebHookManager.ModWebHook;
 import com.theprogrammingturkey.gobblecore.proxy.ProxyManager;
 
 import net.minecraftforge.fml.common.Mod;
@@ -47,6 +50,15 @@ public class CustomUICore implements IModCore
 		ProxyManager.registerModProxy(proxy);
 
 		CustomUICommands.loadCommands();
+
+		WebHookManager.registerHook(new ModWebHook(this)
+		{
+			@Override
+			public void onResponse(JsonElement json)
+			{
+
+			}
+		});
 	}
 
 	@EventHandler
