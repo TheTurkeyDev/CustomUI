@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "after:gobblecore[0.1.4.1,)", guiFactory = CustomUICore.GUIFACTORY)
+@Mod(modid = CustomUICore.MODID, version = CustomUICore.VERSION, name = CustomUICore.NAME, dependencies = "after:gobblecore[0.1.4.13,)", guiFactory = CustomUICore.GUIFACTORY)
 public class CustomUICore implements IModCore
 {
 	public static final String MODID = "customui";

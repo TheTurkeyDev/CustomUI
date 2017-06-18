@@ -33,5 +33,4 @@ public class ConfigGuiFactory implements IModGuiFactory
 	{
 		return null;
 	}
-
 }
