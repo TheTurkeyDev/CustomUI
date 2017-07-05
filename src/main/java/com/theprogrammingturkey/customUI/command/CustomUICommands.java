@@ -5,7 +5,7 @@ import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.gobblecore.commands.BaseCommandHandler;
 import com.theprogrammingturkey.gobblecore.commands.CommandManager;
 import com.theprogrammingturkey.gobblecore.commands.SimpleSubCommand;
-import com.theprogrammingturkey.gobblecore.config.ConfigErrorReporter;
+import com.theprogrammingturkey.gobblecore.config.QueuedMessageReporter;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,12 +27,12 @@ public class CustomUICommands
 			public boolean execute(MinecraftServer server, ICommandSender sender, String[] args)
 			{
 				CustomUIConfigLoader.refreshSettings();
-				ConfigErrorReporter.outputErrors((EntityPlayer) sender);
+				QueuedMessageReporter.outputErrors((EntityPlayer) sender);
 				sender.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Reloaded"));
 				return true;
 			}
 		});
 
-		CommandManager.registerCommandHandlers(commandHandler);
+		CommandManager.registerCommandHandler(commandHandler);
 	}
 }
