@@ -5,7 +5,7 @@ import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.gobblecore.commands.BaseCommandHandler;
 import com.theprogrammingturkey.gobblecore.commands.CommandManager;
 import com.theprogrammingturkey.gobblecore.commands.SimpleSubCommand;
-import com.theprogrammingturkey.gobblecore.config.ConfigErrorReporter;
+import com.theprogrammingturkey.gobblecore.config.QueuedMessageReporter;
 import com.theprogrammingturkey.gobblecore.util.MessageUtil;
 
 import net.minecraft.command.ICommandSender;
@@ -29,13 +29,13 @@ public class CustomUICommands
 				CustomUIConfigLoader.refreshSettings();
 				if(sender instanceof EntityPlayer)
 				{
-					ConfigErrorReporter.outputErrors((EntityPlayer) sender);
+					QueuedMessageReporter.outputErrors((EntityPlayer) sender);
 					MessageUtil.sendMessageToPlayer((EntityPlayer) sender, TextFormatting.GREEN + "Reloaded");
 				}
 				return true;
 			}
 		});
 
-		CommandManager.registerCommandHandlers(commandHandler);
+		CommandManager.registerCommandHandler(commandHandler);
 	}
 }
