@@ -1,6 +1,7 @@
 package com.theprogrammingturkey.customUI.listener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.theprogrammingturkey.customUI.client.gui.ConfigGui.ButtonAnimationType;
@@ -26,7 +27,6 @@ import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import scala.actors.threadpool.Arrays;
 
 public class GuiListener
 {
@@ -76,7 +76,7 @@ public class GuiListener
 			{
 				if(!b.getClass().equals(GuiButton.class) && !b.getClass().equals(GuiToggleButton.class))
 					continue;
-				if(b.isMouseOver() && b.visible)
+				if(b.isMouseOver() && b.visible && b.enabled)
 					if(animationProgress == null || !animationProgress.getKey().equals(b))
 						animationProgress = new CustomEntry<GuiButton, Float>(b, CustomUISettings.buttonAnimationSpeed);
 			}
@@ -213,7 +213,6 @@ public class GuiListener
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public void onGameRender(RenderGameOverlayEvent.Post e)
 	{

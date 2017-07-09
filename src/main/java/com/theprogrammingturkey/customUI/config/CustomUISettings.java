@@ -4,6 +4,7 @@ import com.theprogrammingturkey.customUI.client.gui.ConfigGui.ButtonAnimationTyp
 
 public class CustomUISettings
 {
+	public static boolean customHighlight = false;
 	public static boolean includeDefaultHighlight = false;
 	public static float highlightColorR = 0.0F;
 	public static float highlightColorG = 0.0F;
@@ -16,6 +17,7 @@ public class CustomUISettings
 	public static float highlightLineThickness = 2.0F;
 	public static boolean highlightAffectedByLight = true;
 	public static boolean highlightBlockFaces = true;
+	public static boolean blockPreview = true;
 
 	public static boolean guiHighlight = false;
 	public static float guihighlightColorR = 0.0F;
