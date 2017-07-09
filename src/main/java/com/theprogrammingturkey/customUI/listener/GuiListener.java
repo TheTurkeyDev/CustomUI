@@ -75,7 +75,7 @@ public class GuiListener
 			{
 				if(!b.getClass().equals(GuiButton.class) && !b.getClass().equals(GuiToggleButton.class))
 					continue;
-				if(b.isMouseOver() && b.visible)
+				if(b.isMouseOver() && b.visible && b.enabled)
 					if(animationProgress == null || !animationProgress.getKey().equals(b))
 						animationProgress = new CustomEntry<GuiButton, Float>(b, CustomUISettings.buttonAnimationSpeed);
 			}

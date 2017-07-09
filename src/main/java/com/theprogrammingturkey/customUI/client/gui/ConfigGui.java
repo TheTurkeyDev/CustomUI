@@ -1,6 +1,7 @@
 package com.theprogrammingturkey.customUI.client.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.theprogrammingturkey.customUI.config.CustomUIConfigLoader;
 import com.theprogrammingturkey.customUI.config.CustomUISettings;
@@ -14,7 +15,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import scala.actors.threadpool.Arrays;
 
 public class ConfigGui extends GuiScreen
 {
@@ -29,6 +29,8 @@ public class ConfigGui extends GuiScreen
 
 	private GuiColorSelection boxOutlineColorSelelection;
 	private GuiColorSelection boxFillColorSelelection;
+	private GuiToggleButton customSelectionBox;
+	private GuiButton blockSelectionColors;
 	private GuiSlider thicknessSlider;
 	private GuiToggleButton useDefaultBox;
 	private GuiToggleButton highlightAffectedByLight;
@@ -45,6 +47,8 @@ public class ConfigGui extends GuiScreen
 	private GuiButton armorHUDPosition;
 	private ItemStack[] testItems = { new ItemStack(Items.DIAMOND_BOOTS, 1), new ItemStack(Items.GOLDEN_LEGGINGS, 1), new ItemStack(Items.LEATHER_CHESTPLATE, 1), new ItemStack(Items.IRON_HELMET, 1), new ItemStack(Items.BOW, 1), new ItemStack(Items.STONE_SWORD, 1) };
 	private boolean movingHUD = false;
+
+	private boolean editingColor = false;
 
 	public static boolean buttonPressedThisUpdate = false;
 	private GuiSlider trackedSliderSelected = null;
@@ -64,17 +68,21 @@ public class ConfigGui extends GuiScreen
 
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, 200, 20, "Back"));
 
-		boxOutlineColorSelelection = new GuiColorSelection("Block Highlight Outline", this.buttonList, 10, this.width / 2 - 100, 30);
+		boxOutlineColorSelelection = new GuiColorSelection("Block Highlight Outline", this.buttonList, this.width / 2 - 100, 30);
 		boxOutlineColorSelelection.setCurrentValues(CustomUISettings.highlightColorR, CustomUISettings.highlightColorG, CustomUISettings.highlightColorB, CustomUISettings.highlightColorA);
-		boxFillColorSelelection = new GuiColorSelection("Block Highlight Fill", this.buttonList, 19, this.width / 2 - 100, 150);
+		boxOutlineColorSelelection.setVisible(false);
+		boxFillColorSelelection = new GuiColorSelection("Block Highlight Fill", this.buttonList, this.width / 2 - 100, 150);
 		boxFillColorSelelection.setCurrentValues(CustomUISettings.fillColorR, CustomUISettings.fillColorG, CustomUISettings.fillColorB, CustomUISettings.fillColorA);
+		boxFillColorSelelection.setVisible(false);
 
-		this.buttonList.add(thicknessSlider = new GuiSlider(14, "Thickness", this.width / 2 - 100, 270, 1F, 10F, CustomUISettings.highlightLineThickness, 0.5F));
-		this.buttonList.add(useDefaultBox = new GuiToggleButton(15, this.width / 2 - 100, 295, 150, 20, "Vanilla selection box: ", CustomUISettings.includeDefaultHighlight));
-		this.buttonList.add(highlightAffectedByLight = new GuiToggleButton(16, this.width / 2 - 100, 320, 150, 20, "Dim with light levels: ", CustomUISettings.highlightAffectedByLight));
-		this.buttonList.add(highlightBlockFaces = new GuiToggleButton(17, this.width / 2 - 100, 345, 150, 20, "Highlight Block Faces: ", CustomUISettings.highlightBlockFaces));
+		this.buttonList.add(useDefaultBox = new GuiToggleButton(15, this.width / 2 - 100, 30, 150, 20, "Vanilla selection box: ", CustomUISettings.includeDefaultHighlight));
+		this.buttonList.add(customSelectionBox = new GuiToggleButton(10, this.width / 2 - 100, 55, 150, 20, "Custom Selection Box: ", CustomUISettings.customHighlight));
+		this.buttonList.add(highlightBlockFaces = new GuiToggleButton(17, this.width / 2 - 100, 80, 150, 20, "Highlight Block Faces: ", CustomUISettings.highlightBlockFaces));
+		this.buttonList.add(blockSelectionColors = new GuiButton(11, this.width / 2 - 100, 105, 150, 20, "Set Colors"));
+		this.buttonList.add(thicknessSlider = new GuiSlider(14, "Thickness", this.width / 2 - 100, 130, 1F, 10F, CustomUISettings.highlightLineThickness, 0.5F));
+		this.buttonList.add(highlightAffectedByLight = new GuiToggleButton(16, this.width / 2 - 100, 155, 150, 20, "Dim with light levels: ", CustomUISettings.highlightAffectedByLight));
 
-		guiHighlightColorSelelection = new GuiColorSelection("Gui Highligt", this.buttonList, 40, this.width / 2 - 100, 30);
+		guiHighlightColorSelelection = new GuiColorSelection("Gui Highligt", this.buttonList, this.width / 2 - 100, 30);
 		guiHighlightColorSelelection.setCurrentValues(CustomUISettings.guihighlightColorR, CustomUISettings.guihighlightColorG, CustomUISettings.guihighlightColorB, CustomUISettings.guihighlightColorA);
 		this.buttonList.add(useGuiHighlight = new GuiToggleButton(44, this.width / 2 - 100, 150, 150, 20, "Gui Highlight: ", CustomUISettings.guiHighlight));
 
@@ -88,14 +96,13 @@ public class ConfigGui extends GuiScreen
 		this.setEditState(editing);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
-		if(this.editing == SettingEditing.BlockHighlight)
+		if(this.editing == SettingEditing.BlockHighlight && editingColor)
 		{
 			this.boxOutlineColorSelelection.drawScreen(mouseX, mouseY, partialTicks);
 			this.boxFillColorSelelection.drawScreen(mouseX, mouseY, partialTicks);
@@ -145,8 +152,23 @@ public class ConfigGui extends GuiScreen
 				}
 				else if(this.editing == SettingEditing.BlockHighlight)
 				{
+					if(this.editingColor)
+					{
+						this.editingColor = false;
+						this.boxFillColorSelelection.setVisible(false);
+						this.boxOutlineColorSelelection.setVisible(false);
+						this.customSelectionBox.visible = true;
+						this.blockSelectionColors.visible = true;
+						this.thicknessSlider.visible = true;
+						this.useDefaultBox.visible = true;
+						this.highlightAffectedByLight.visible = true;
+						this.highlightBlockFaces.visible = true;
+					}
+					else
+					{
+						goBack = true;
+					}
 					CustomUIConfigLoader.saveBlockHighlightSettings(this.boxOutlineColorSelelection, this.boxFillColorSelelection, thicknessSlider.getValueAdjusted(10.0F));
-					goBack = true;
 				}
 				else if(this.editing == SettingEditing.GuiHighlight)
 				{
@@ -176,21 +198,37 @@ public class ConfigGui extends GuiScreen
 				if(goBack)
 					this.setEditState(SettingEditing.None);
 			}
+			else if(button.id == 10)
+			{
+				CustomUISettings.customHighlight = this.customSelectionBox.isToggledOn();
+			}
+			else if(button.id == 11)
+			{
+				this.editingColor = true;
+				this.boxFillColorSelelection.setVisible(true);
+				this.boxOutlineColorSelelection.setVisible(true);
+				this.customSelectionBox.visible = false;
+				this.blockSelectionColors.visible = false;
+				this.thicknessSlider.visible = false;
+				this.useDefaultBox.visible = false;
+				this.highlightAffectedByLight.visible = false;
+				this.highlightBlockFaces.visible = false;
+			}
 			else if(button.id == 15)
 			{
-				CustomUISettings.includeDefaultHighlight = !CustomUISettings.includeDefaultHighlight;
+				CustomUISettings.includeDefaultHighlight = this.useDefaultBox.isToggledOn();
 			}
 			else if(button.id == 16)
 			{
-				CustomUISettings.highlightAffectedByLight = !CustomUISettings.highlightAffectedByLight;
+				CustomUISettings.highlightAffectedByLight = this.highlightAffectedByLight.isToggledOn();
 			}
 			else if(button.id == 17)
 			{
-				CustomUISettings.highlightBlockFaces = !CustomUISettings.highlightBlockFaces;
+				CustomUISettings.highlightBlockFaces = this.highlightBlockFaces.isToggledOn();
 			}
 			else if(button.id == 20)
 			{
-				CustomUISettings.buttonAnimation = !CustomUISettings.buttonAnimation;
+				CustomUISettings.buttonAnimation = this.useButtonAnimation.isToggledOn();
 			}
 			else if(button.id == 21)
 			{
@@ -213,7 +251,7 @@ public class ConfigGui extends GuiScreen
 			}
 			else if(button.id == 44)
 			{
-				CustomUISettings.guiHighlight = !CustomUISettings.guiHighlight;
+				CustomUISettings.guiHighlight = this.useGuiHighlight.isToggledOn();
 			}
 			else if(button.id == 1000)
 			{
@@ -249,8 +287,8 @@ public class ConfigGui extends GuiScreen
 
 	public void setEditState(SettingEditing setting)
 	{
-		this.boxFillColorSelelection.setVisible(setting == SettingEditing.BlockHighlight);
-		this.boxOutlineColorSelelection.setVisible(setting == SettingEditing.BlockHighlight);
+		this.customSelectionBox.visible = setting == SettingEditing.BlockHighlight;
+		this.blockSelectionColors.visible = setting == SettingEditing.BlockHighlight;
 		this.guiHighlightColorSelelection.setVisible(setting == SettingEditing.GuiHighlight);
 		this.thicknessSlider.visible = setting == SettingEditing.BlockHighlight;
 		this.useDefaultBox.visible = setting == SettingEditing.BlockHighlight;
