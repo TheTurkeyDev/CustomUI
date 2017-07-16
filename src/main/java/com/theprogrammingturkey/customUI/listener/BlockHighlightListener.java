@@ -20,7 +20,8 @@ public class BlockHighlightListener
 	@SubscribeEvent
 	public void onBlockOutlineRender(DrawBlockHighlightEvent e)
 	{
-		this.drawSelectionBox(e.getPlayer(), e.getTarget(), e.getSubID(), e.getPartialTicks());
+		if(CustomUISettings.highlightBlockFaces || CustomUISettings.customHighlight)
+			this.drawSelectionBox(e.getPlayer(), e.getTarget(), e.getSubID(), e.getPartialTicks());
 		if(!CustomUISettings.includeDefaultHighlight)
 			e.setCanceled(true);
 	}
@@ -105,7 +106,8 @@ public class BlockHighlightListener
 				if(CustomUISettings.highlightBlockFaces)
 					RenderGlobal.renderFilledBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmountFill, greenAmountFill, blueAmountFill, alphaAmountFill);
 
-				RenderGlobal.drawSelectionBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmountHighlight, greenAmountHighlight, blueAmountHighlight, alphaAmountHighlight);
+				if(CustomUISettings.customHighlight)
+					RenderGlobal.drawSelectionBoundingBox(iblockstate.getSelectedBoundingBox(theWorld, blockpos).expandXyz(0.0020000000949949026D).offset(-d0, -d1, -d2), redAmountHighlight, greenAmountHighlight, blueAmountHighlight, alphaAmountHighlight);
 			}
 
 			GlStateManager.depthMask(true);

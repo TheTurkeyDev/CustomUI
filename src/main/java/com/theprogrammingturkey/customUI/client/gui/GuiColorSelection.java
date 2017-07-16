@@ -21,15 +21,15 @@ public class GuiColorSelection
 	private int x;
 	private int y;
 
-	public GuiColorSelection(String disp, List<GuiButton> buttonList, int startID, int x, int y)
+	public GuiColorSelection(String disp, List<GuiButton> buttonList, int x, int y)
 	{
 		this.dispLabel = disp;
 		this.x = x;
 		this.y = y;
-		buttonList.add(redSlider = new GuiSlider(startID, "Red", x, y, 0F, 1F, 0, 0.01F));
-		buttonList.add(greenSlider = new GuiSlider(startID++, "Green", x, y + 25, 0F, 1F, 0, 0.01F));
-		buttonList.add(blueSlider = new GuiSlider(startID++, "Blue", x, y + 50, 0F, 1F, 0, 0.01F));
-		buttonList.add(alphaSlider = new GuiSlider(startID++, "Alpha", x, y + 75, 0F, 1F, 0, 0.01F));
+		buttonList.add(redSlider = new GuiSlider(1, "Red", x, y, 0F, 1F, 0, 0.01F));
+		buttonList.add(greenSlider = new GuiSlider(2, "Green", x, y + 25, 0F, 1F, 0, 0.01F));
+		buttonList.add(blueSlider = new GuiSlider(3, "Blue", x, y + 50, 0F, 1F, 0, 0.01F));
+		buttonList.add(alphaSlider = new GuiSlider(4, "Alpha", x, y + 75, 0F, 1F, 0, 0.01F));
 	}
 
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
