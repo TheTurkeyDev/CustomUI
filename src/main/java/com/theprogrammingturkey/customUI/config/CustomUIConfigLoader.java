@@ -21,6 +21,7 @@ public class CustomUIConfigLoader
 	public static final String defaultHighlight = "include Default Highlight";
 	public static final String dimHighlight = "highlight Affected By Light";
 	public static final String faceHighlight = "Highlight Block Faces";
+	public static final String customHighlight = "Highlight Block Edges With Custom Color";
 
 	public static final String guiHighlight = "Gui Slot Highlighting";
 
@@ -67,6 +68,7 @@ public class CustomUIConfigLoader
 		CustomUISettings.highlightLineThickness = config.getFloat(thicknessAmount, bhCat, 2F, 1F, 10F, "How thick the highlight line should be.");
 		CustomUISettings.highlightAffectedByLight = config.getBoolean(dimHighlight, bhCat, false, "Set to true for the block highlight to dim to match the blocks light level");
 		CustomUISettings.highlightBlockFaces = config.getBoolean(faceHighlight, bhCat, false, "Set to true for block faces to be highlighted aswell");
+		CustomUISettings.customHighlight = config.getBoolean(customHighlight, bhCat, false, "Set to true for block edges to be highlighted with a custom color");
 
 		CustomUISettings.guiHighlight = config.getBoolean(guiHighlight, ghCat, false, "Set to true to enable highlighting the currently hovered slot.");
 		CustomUISettings.guihighlightColorR = config.getFloat(redAmount, ghCat, 0F, 0F, 1F, "Red color value to be mixed into the the gui hightlight overall color");
@@ -133,6 +135,9 @@ public class CustomUIConfigLoader
 
 		prop = config.get(bhCat, faceHighlight, false);
 		prop.set(CustomUISettings.highlightBlockFaces);
+		
+		prop = config.get(bhCat, customHighlight, false);
+		prop.set(CustomUISettings.customHighlight);
 
 		config.save();
 	}
